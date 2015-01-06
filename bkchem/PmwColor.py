@@ -1,7 +1,6 @@
 # Functions for converting colors and modifying the color scheme of
 # an application.
 
-import sys
 import math
 try:
     import tkinter as Tkinter
