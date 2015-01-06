@@ -9,14 +9,14 @@ except ImportError:
 
 
 # Supported commands:
-_busyCommand = '::blt::busy'
+_busyCommand   = '::blt::busy'
 _vectorCommand = '::blt::vector'
-_graphCommand = '::blt::graph'
-_testCommand = '::blt::*'
-_chartCommand = '::blt::stripchart'
+_graphCommand  = '::blt::graph'
+_testCommand   = '::blt::*'
+_chartCommand  = '::blt::stripchart'
 _tabsetCommand = '::blt::tabset'
 
-_haveBlt = None
+_haveBlt     = None
 _haveBltBusy = None
 
 
@@ -35,7 +35,7 @@ def _checkForBlt(window):
         except Tkinter.TclError:
             pass
 
-    _haveBlt= (window.tk.call('info', 'commands', _testCommand) != '')
+    _haveBlt     = (window.tk.call('info', 'commands', _testCommand) != '')
     _haveBltBusy = (window.tk.call('info', 'commands', _busyCommand) != '')
 
 
@@ -60,7 +60,7 @@ def _loadBlt(window):
         _checkForBlt(window)
 
 
-def busy_hold(window, cursor = None):
+def busy_hold(window, cursor=None):
     _loadBlt(window)
     if cursor is None:
         window.tk.call(_busyCommand, 'hold', window._w)
@@ -423,7 +423,7 @@ class Graph(Tkinter.Widget):
                 self._w, 'xaxis', 'transform', value))
 
 
-    def xaxis_use(self, axisName = None):
+    def xaxis_use(self, axisName=None):
         return self.tk.call(self._w, 'xaxis', 'use', axisName)
 
 
@@ -450,7 +450,7 @@ class Graph(Tkinter.Widget):
                 self._w, 'x2axis', 'transform', value))
 
 
-    def x2axis_use(self, axisName = None):
+    def x2axis_use(self, axisName=None):
         return self.tk.call(self._w, 'x2axis', 'use', axisName)
 
 
@@ -477,7 +477,7 @@ class Graph(Tkinter.Widget):
                 self._w, 'yaxis', 'transform', value))
 
 
-    def yaxis_use(self, axisName = None):
+    def yaxis_use(self, axisName=None):
         return self.tk.call(self._w, 'yaxis', 'use', axisName)
 
 
@@ -504,7 +504,7 @@ class Graph(Tkinter.Widget):
                 self._w, 'y2axis', 'transform', value))
 
 
-    def y2axis_use(self, axisName = None):
+    def y2axis_use(self, axisName=None):
         return self.tk.call(self._w, 'y2axis', 'use', axisName)
 
 
@@ -788,7 +788,7 @@ class Tabset(Tkinter.Widget):
             self.deletecommand(funcid)
 
 
-    def delete(self, first, last = None):
+    def delete(self, first, last=None):
         self.tk.call(self._w, 'delete', first, last)
 
 
@@ -866,7 +866,7 @@ class Tabset(Tkinter.Widget):
         return self.tk.splitlist(self.tk.call((self._w, 'tab', 'names') + args))
 
 
-    def tab_tearoff(self, tabIndex, newName = None):
+    def tab_tearoff(self, tabIndex, newName=None):
         if newName is None:
             name = self.tk.call(self._w, 'tab', 'tearoff', tabIndex)
             return self.nametowidget(name)
