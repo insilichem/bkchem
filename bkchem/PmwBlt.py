@@ -130,7 +130,13 @@ class Vector(object):
 
 
     def __cmp__(self, l):
-        return cmp(self[:], l)
+        ll = self[:]
+        if ll < l:
+            return -1
+        elif ll == l:
+            return 0
+        else:
+            return 1
 
 
     def __len__(self):
