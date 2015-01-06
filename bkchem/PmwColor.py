@@ -8,11 +8,11 @@ except ImportError:
     import Tkinter
 
 
-_PI = math.pi
-_TWO_PI = _PI * 2
+_PI       = math.pi
+_TWO_PI   = _PI * 2
 _THIRD_PI = _PI / 3
 _SIXTH_PI = _PI / 6
-_MAX_RGB = float(256 * 256 - 1) # max size of rgb values returned from Tk
+_MAX_RGB  = float(256 * 256 - 1) # max size of rgb values returned from Tk
 
 
 
@@ -32,18 +32,18 @@ def getdefaultpalette(root):
     scbar = Tkinter.Scrollbar(root)
 
     orig = {}
-    orig['activeBackground'] = str(ckbtn.configure('activebackground')[4])
-    orig['activeForeground'] = str(ckbtn.configure('activeforeground')[4])
-    orig['background'] = str(ckbtn.configure('background')[4])
-    orig['disabledForeground'] = str(ckbtn.configure('disabledforeground')[4])
-    orig['foreground'] = str(ckbtn.configure('foreground')[4])
+    orig['activeBackground']    = str(ckbtn.configure('activebackground')[4])
+    orig['activeForeground']    = str(ckbtn.configure('activeforeground')[4])
+    orig['background']          = str(ckbtn.configure('background')[4])
+    orig['disabledForeground']  = str(ckbtn.configure('disabledforeground')[4])
+    orig['foreground']          = str(ckbtn.configure('foreground')[4])
     orig['highlightBackground'] = str(ckbtn.configure('highlightbackground')[4])
-    orig['highlightColor'] = str(ckbtn.configure('highlightcolor')[4])
-    orig['insertBackground'] = str(entry.configure('insertbackground')[4])
-    orig['selectColor'] = str(ckbtn.configure('selectcolor')[4])
-    orig['selectBackground'] = str(entry.configure('selectbackground')[4])
-    orig['selectForeground'] = str(entry.configure('selectforeground')[4])
-    orig['troughColor'] = str(scbar.configure('troughcolor')[4])
+    orig['highlightColor']      = str(ckbtn.configure('highlightcolor')[4])
+    orig['insertBackground']    = str(entry.configure('insertbackground')[4])
+    orig['selectColor']         = str(ckbtn.configure('selectcolor')[4])
+    orig['selectBackground']    = str(entry.configure('selectbackground')[4])
+    orig['selectForeground']    = str(entry.configure('selectforeground')[4])
+    orig['troughColor']         = str(scbar.configure('troughcolor')[4])
 
     ckbtn.destroy()
     entry.destroy()
@@ -66,7 +66,7 @@ def changebrightness(root, colorName, brightness):
     return hue2name(hue, brightness)
 
 
-def hue2name(hue, brightness = None):
+def hue2name(hue, brightness=None):
     # Convert the requested hue and brightness into a color name.  If
     # hue is None, return a grey of the requested brightness.
 
@@ -199,7 +199,7 @@ def rgb2hsi(rgb):
     return (hue, saturation, intensity)
 
 
-def name2rgb(root, colorName, asInt = 0):
+def name2rgb(root, colorName, asInt=0):
     if colorName[0] == '#':
         # Extract rgb information from the color name itself, assuming
         # it is either #rgb, #rrggbb, #rrrgggbbb, or #rrrrggggbbbb
@@ -293,8 +293,8 @@ def _calcPalette(root, background=None, **kw):
     return new
 
 
-def spectrum(numColors, correction = 1.0, saturation = 1.0, intensity = 1.0,
-             extraOrange = 1, returnHues = 0):
+def spectrum(numColors, correction=1.0, saturation=1.0, intensity=1.0,
+             extraOrange=1, returnHues=0):
     colorList = []
     division = numColors / 7.0
     for index in range(numColors):
@@ -362,7 +362,8 @@ def bordercolors(root, colorName):
     # This is the same method that Tk uses for shadows, in TkpGetShadows.
 
     lightRGB = []
-    darkRGB = []
+    darkRGB  = []
+
     for value in name2rgb(root, colorName, 1):
         value40pc = int((14 * value) / 10)
         if value40pc > _MAX_RGB:
