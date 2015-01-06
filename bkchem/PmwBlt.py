@@ -727,9 +727,9 @@ class Graph(Tkinter.Widget):
         return _doConfigure(self, subcommand, option, kw)
 
 
-    def marker_create(self, type, **kw):
+    def marker_create(self, t, **kw):
         return self.tk.call(
-                (self._w, 'marker', 'create', type) + self._options(kw))
+                (self._w, 'marker', 'create', t) + self._options(kw))
 
 
     def marker_delete(self, *args):
@@ -747,10 +747,10 @@ class Graph(Tkinter.Widget):
 
 
     def marker_type(self, name):
-        type = self.tk.call(self._w, 'marker', 'type', name)
-        if type == '':
-            type = None
-        return type
+        t = self.tk.call(self._w, 'marker', 'type', name)
+        if t == '':
+            t = None
+        return t
 
 
 
