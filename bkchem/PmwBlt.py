@@ -129,8 +129,8 @@ class Vector(object):
         return '[' + ', '.join(map(str, self)) + ']'
 
 
-    def __cmp__(self, list):
-        return cmp(self[:], list)
+    def __cmp__(self, l):
+        return cmp(self[:], l)
 
 
     def __len__(self):
