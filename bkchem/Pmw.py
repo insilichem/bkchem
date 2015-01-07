@@ -10,15 +10,7 @@ try:
 except ImportError:
     import Tkinter
 
-
-import PmwColor
-Color = PmwColor
-del PmwColor
-
-import PmwBlt
-Blt = PmwBlt
-del PmwBlt
-
+import PmwColor as Color
 
 from misc import myisstr as _myisstr
 
