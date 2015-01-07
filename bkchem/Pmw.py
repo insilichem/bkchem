@@ -17,25 +17,29 @@ if sys.version_info[0] == 2:
     str = unicode
 
 
-### Loader functions:
 
+### Loader functions:
 _VERSION = '1.2'
+
 
 def setversion(version):
     if version != _VERSION:
         raise ValueError('Dynamic versioning not available')
 
+
 def setalphaversions(*alpha_versions):
     if alpha_versions != ():
         raise ValueError('Dynamic versioning not available')
 
-def version(alpha = 0):
+
+def version(alpha=0):
     if alpha:
         return ()
     else:
         return _VERSION
 
-def installedversions(alpha = 0):
+
+def installedversions(alpha=0):
     if alpha:
         return ()
     else:
@@ -132,7 +136,6 @@ _grabStack = []
     # python instance associated with it.
 
 #=============================================================================
-
 # Functions used to forward methods from a class to a component.
 
 # Fill in a flattened method resolution dictionary for a class (attributes are
@@ -156,15 +159,17 @@ def __methodDict(cls, d):
         if isinstance(value, collections.Callable):
             d[key] = value
 
+
 def __methods(cls):
     # Return all method names for a class.
 
     # Return all method names for a class (attributes are filtered
     # out).  Base classes are searched recursively.
-
     d = {}
     __methodDict(cls, d)
+
     return d.keys()
+
 
 # Function body to resolve a forwarding given the target method name and the
 # attribute name. The resulting lambda requires only self, but will forward
@@ -175,10 +180,13 @@ __stringBody = (
 
 # Get a unique id
 __counter = 0
+
+
 def __unique():
   global __counter
   __counter = __counter + 1
   return str(__counter)
+
 
 # Function body to resolve a forwarding given the target method name and the
 # index of the resolution function. The resulting lambda requires only self,
@@ -188,7 +196,8 @@ __funcBody = (
     'def %(method)s(this, *args, **kw): return ' +
     'this.%(forwardFunc)s().%(method)s(*args, **kw)')
 
-def forwardmethods(fromClass, toClass, toPart, exclude = ()):
+
+def forwardmethods(fromClass, toClass, toPart, exclude=()):
     # Forward all methods from one class to another.
 
     # Forwarders will be created in fromClass to forward method
@@ -251,10 +260,12 @@ def forwardmethods(fromClass, toClass, toPart, exclude = ()):
                   if ex[:1] == '_' or ex[-1:] == '_']
     for i in tmp:
         del d[i]
+
     # discard dangerous methods supplied by the caller
     for ex in exclude:
         if ex in d:
             del d[ex]
+
     # discard methods already defined in fromClass
     for ex in __methods(fromClass):
         if ex in d:
@@ -264,15 +275,16 @@ def forwardmethods(fromClass, toClass, toPart, exclude = ()):
         di = {'method': method, 'func': func}
         if _myisstr(toPart):
             execString = \
-                __stringBody % {'method' : method, 'attribute' : toPart}
+                __stringBody % {'method': method, 'attribute': toPart}
         else:
             execString = \
-                __funcBody % {'forwardFunc' : forwardName, 'method' : method}
+                __funcBody % {'forwardFunc': forwardName, 'method': method}
 
         exec(execString, di)
 
         # this creates a method
         setattr(fromClass, method, di[method])
+
 
 #=============================================================================
 
@@ -323,6 +335,7 @@ def setgeometryanddeiconify(window, geom):
             # and so we need to raise it ourselves.
             window.tkraise()
 
+
 #=============================================================================
 
 class MegaArchetype(object):
@@ -332,7 +345,7 @@ class MegaArchetype(object):
     # implementing useful bases (this class doesn't provide a
     # container widget inside which the megawidget can be built).
 
-    def __init__(self, parent = None, hullClass = None):
+    def __init__(self, parent=None, hullClass=None):
 
         # Mapping from each megawidget option to a list of information
         # about the option
@@ -408,8 +421,10 @@ class MegaArchetype(object):
                 # constructor.  This assumes that defineoptions() is
                 # called before the __init__().
                 option_get = self.option_get
-                _VALUE = _OPT_VALUE
+
+                _VALUE   = _OPT_VALUE
                 _DEFAULT = _OPT_DEFAULT
+
                 for name, info in self._optionInfo.items():
                     value = info[_VALUE]
                     if value is _DEFAULT_OPTION_VALUE:
@@ -425,6 +440,7 @@ class MegaArchetype(object):
                         else:
                             info[_VALUE] = info[_DEFAULT]
 
+
     def destroy(self):
         # Clean up optionInfo in case it contains circular references
         # in the function field, such as self._settitle in class
@@ -438,7 +454,7 @@ class MegaArchetype(object):
     #======================================================================
     # Methods used (mainly) during the construction of the megawidget.
 
-    def defineoptions(self, keywords, optionDefs, dynamicGroups = ()):
+    def defineoptions(self, keywords, optionDefs, dynamicGroups=()):
         # Create options, providing the default value and the method
         # to call when the value is changed.  If any option created by
         # base classes has the same name as one in <optionDefs>, the
@@ -463,6 +479,7 @@ class MegaArchetype(object):
         self._dynamicGroups = self._dynamicGroups + tuple(dynamicGroups)
         self.addoptions(optionDefs)
 
+
     def addoptions(self, optionDefs):
         # Add additional options, providing the default value and the
         # method to call when the value is changed.  See
@@ -470,7 +487,8 @@ class MegaArchetype(object):
 
         # optimisations:
         optionInfo = self._optionInfo
-        keywords = self._constructorKeywords
+        keywords   = self._constructorKeywords
+
         FUNCTION = _OPT_FUNCTION
 
         for name, default, function in optionDefs:
@@ -499,6 +517,7 @@ class MegaArchetype(object):
                 # of an option of a component of a base class.
                 if name not in keywords:
                     keywords[name] = [default, 0]
+
 
     def createcomponent(self, componentName, componentAliases,
             componentGroup, widgetClass, *widgetArgs, **kw):
@@ -578,6 +597,7 @@ class MegaArchetype(object):
 
         return widget
 
+
     def destroycomponent(self, name):
         # Remove a megawidget component.
 
@@ -587,9 +607,10 @@ class MegaArchetype(object):
         self.__componentInfo[name][0].destroy()
         del self.__componentInfo[name]
 
-    def createlabel(self, parent, childCols = 1, childRows = 1):
 
-        labelpos = self['labelpos']
+    def createlabel(self, parent, childCols=1, childRows=1):
+
+        labelpos    = self['labelpos']
         labelmargin = self['labelmargin']
         if labelpos is None:
             return
@@ -619,7 +640,8 @@ class MegaArchetype(object):
             label.grid(column=col, row=2, rowspan=childRows, sticky=labelpos)
             parent.grid_columnconfigure(margin, minsize=labelmargin)
 
-    def initialiseoptions(self, dummy = None):
+
+    def initialiseoptions(self, dummy=None):
         self._initialiseoptions_counter = self._initialiseoptions_counter - 1
         if self._initialiseoptions_counter == 0:
             unusedOptions = []
@@ -690,10 +712,11 @@ class MegaArchetype(object):
                         config[_OPT_VALUE])
 
         # optimisations:
-        optionInfo = self._optionInfo
-        componentInfo = self.__componentInfo
+        optionInfo       = self._optionInfo
+        componentInfo    = self.__componentInfo
         componentAliases = self.__componentAliases
-        VALUE = _OPT_VALUE
+
+        VALUE    = _OPT_VALUE
         FUNCTION = _OPT_FUNCTION
 
         # This will contain a list of options in *kw* which
@@ -773,6 +796,7 @@ class MegaArchetype(object):
             if func is not None:
               func()
 
+
     def __setitem__(self, key, value):
         self.configure(**{key: value})
 
@@ -810,14 +834,18 @@ class MegaArchetype(object):
         else:
             return widget.component(remainingComponents)
 
+
     def interior(self):
         return self._hull
+
 
     def hulldestroyed(self):
         return self._hull not in _hullToMegaWidget
 
+
     def __str__(self):
         return str(self._hull)
+
 
     def cget(self, option):
         # Get current configuration setting.
@@ -858,8 +886,10 @@ class MegaArchetype(object):
 
     __getitem__ = cget
 
+
     def isinitoption(self, option):
         return self._optionInfo[option][_OPT_FUNCTION] is INITOPT
+
 
     def options(self):
         options = []
@@ -871,10 +901,12 @@ class MegaArchetype(object):
             options.sort()
         return options
 
+
     def components(self):
         # Return a list of all components.
         # This list includes the 'hull' component and all widget subcomponents
         return sorted(self.__componentInfo.keys())
+
 
     def componentaliases(self):
         # Return a list of all component aliases.
@@ -892,11 +924,13 @@ class MegaArchetype(object):
 
         return rtn
 
+
     def componentgroup(self, name):
         return self.__componentInfo[name][4]
 
-#=============================================================================
 
+
+#=============================================================================
 # The grab functions are mainly called by the activate() and
 # deactivate() methods.
 #
@@ -911,15 +945,16 @@ class MegaArchetype(object):
 
 def pushgrab(grabWindow, globalMode, deactivateFunction):
     prevFocus = grabWindow.tk.call('focus')
-    grabInfo = {
-        'grabWindow' : grabWindow,
-        'globalMode' : globalMode,
-        'previousFocus' : prevFocus,
-        'deactivateFunction' : deactivateFunction,
+    grabInfo  = {
+        'grabWindow':         grabWindow,
+        'globalMode':         globalMode,
+        'previousFocus':      prevFocus,
+        'deactivateFunction': deactivateFunction,
     }
     _grabStack.append(grabInfo)
     _grabtop()
     grabWindow.focus_set()
+
 
 def popgrab(window):
     # Return the grab to the next window in the grab stack, if any.
@@ -961,11 +996,13 @@ def popgrab(window):
         else:
             Tkinter._default_root.focus_set()
 
+
 def grabstacktopwindow():
     if len(_grabStack) == 0:
         return None
     else:
         return _grabStack[-1]['grabWindow']
+
 
 def releasegrabs():
     # Release grab and clear the grab stack.
@@ -974,6 +1011,7 @@ def releasegrabs():
     if current is not None:
         current.grab_release()
     _grabStack[:] = []
+
 
 def _grabtop():
     grabInfo = _grabStack[-1]
@@ -999,7 +1037,7 @@ def _grabtop():
 
 class MegaToplevel(MegaArchetype):
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
         # Define the options for this megawidget.
         optiondefs = (
             ('activatecommand',   None,                     None),
@@ -1038,10 +1076,12 @@ class MegaToplevel(MegaArchetype):
         # Check keywords and initialise options.
         self.initialiseoptions()
 
+
     def _settitle(self):
         title = self['title']
         if title is not None:
             self.title(title)
+
 
     def userdeletefunc(self, func=None):
         if func:
@@ -1049,17 +1089,20 @@ class MegaToplevel(MegaArchetype):
         else:
             return self._userDeleteFunc
 
+
     def usermodaldeletefunc(self, func=None):
         if func:
             self._userModalDeleteFunc = func
         else:
             return self._userModalDeleteFunc
 
+
     def _userDeleteWindow(self):
         if self.active():
             self._userModalDeleteFunc()
         else:
             self._userDeleteFunc()
+
 
     def destroy(self):
         # Allow this to be called more than once.
@@ -1072,7 +1115,8 @@ class MegaToplevel(MegaArchetype):
 
             MegaArchetype.destroy(self)
 
-    def show(self, master = None):
+
+    def show(self, master=None):
         if self.state() != 'normal':
             if self._firstShowing:
                 # Just let the window manager determine the window
@@ -1102,6 +1146,7 @@ class MegaToplevel(MegaArchetype):
 
         self.focus()
 
+
     def _centreonscreen(self):
         # Centre the window on the screen.  (Actually halfway across
         # and one third down.)
@@ -1129,6 +1174,7 @@ class MegaToplevel(MegaArchetype):
             y = 0
         return '+%d+%d' % (x, y)
 
+
     def _sameposition(self):
         # Position the window at the same place it was last time.
 
@@ -1139,7 +1185,8 @@ class MegaToplevel(MegaArchetype):
         else:
             return None
 
-    def activate(self, globalMode = 0, geometry = 'centerscreenfirst'):
+
+    def activate(self, globalMode=0, geometry='centerscreenfirst'):
         if self._active:
             raise ValueError('Window is already active')
         if self.state() == 'normal':
@@ -1195,6 +1242,7 @@ class MegaToplevel(MegaArchetype):
 
         return self._result
 
+
     def deactivate(self, result=None):
         if not self._active:
             return
@@ -1216,8 +1264,11 @@ class MegaToplevel(MegaArchetype):
         self._result = result
         self._wait.set(1)
 
+
     def active(self):
         return self._active
+
+
 
 forwardmethods(MegaToplevel, Tkinter.Toplevel, '_hull')
 
@@ -1225,10 +1276,10 @@ forwardmethods(MegaToplevel, Tkinter.Toplevel, '_hull')
 
 class MegaWidget(MegaArchetype):
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
         # Define the options for this megawidget.
         optiondefs = (
-            ('hull_class',       self.__class__.__name__,  None),
+            ('hull_class', self.__class__.__name__, None),
         )
         self.defineoptions(kw, optiondefs)
 
@@ -1238,15 +1289,18 @@ class MegaWidget(MegaArchetype):
         # Check keywords and initialise options.
         self.initialiseoptions()
 
+
+
 forwardmethods(MegaWidget, Tkinter.Frame, '_hull')
 
 #=============================================================================
-
 # Public functions
 #-----------------
 
 _traceTk = 0
-def tracetk(root = None, on = 1, withStackTrace = 0, file=None):
+
+
+def tracetk(root=None, on=1, withStackTrace=0, file=None):
     global _withStackTrace
     global _traceTkFile
     global _traceTk
@@ -1272,15 +1326,16 @@ def tracetk(root = None, on = 1, withStackTrace = 0, file=None):
         tk = root.tk.getTclInterp()
     _setTkInterps(root, tk)
 
+
 def showbusycursor():
 
     _addRootToToplevelBusyInfo()
     root = Tkinter._default_root
 
     busyInfo = {
-        'newBusyWindows' : [],
-        'previousFocus' : None,
-        'busyFocus' : None,
+        'newBusyWindows': [],
+        'previousFocus':  None,
+        'busyFocus':      None,
     }
     _busyStack.append(busyInfo)
 
@@ -1322,7 +1377,8 @@ def showbusycursor():
         else:
             window.update_idletasks()
 
-def hidebusycursor(forceFocusRestore = 0):
+
+def hidebusycursor(forceFocusRestore=0):
 
     # Remember the focus as it is now, before it is changed.
     root = Tkinter._default_root
@@ -1372,9 +1428,11 @@ def hidebusycursor(forceFocusRestore = 0):
             # changed to before the call to hidebusycursor.
             root.tk.call('focus', currentFocus)
 
+
 def clearbusycursor():
     while len(_busyStack) > 0:
         hidebusycursor()
+
 
 def setbusycursorattributes(window, **kw):
     _addRootToToplevelBusyInfo()
@@ -1385,6 +1443,7 @@ def setbusycursorattributes(window, **kw):
             _toplevelBusyInfo[window]['busyCursorName'] = value
         else:
             raise KeyError('Unknown busycursor attribute "' + name + '"')
+
 
 def _addRootToToplevelBusyInfo():
     # Include the Tk root window in the list of toplevels.  This must
@@ -1397,19 +1456,23 @@ def _addRootToToplevelBusyInfo():
     if root not in _toplevelBusyInfo:
         _addToplevelBusyInfo(root)
 
-def busycallback(command, updateFunction = None):
+
+def busycallback(command, updateFunction=None):
     if not isinstance(command, collections.Callable):
         raise ValueError('cannot register non-command busy callback %s %s'
                          % (repr(command), type(command)))
     wrapper = _BusyWrapper(command, updateFunction)
     return wrapper.callback
 
-_errorReportFile = None
-_errorWindow = None
 
-def reporterrorstofile(file = None):
+_errorReportFile = None
+_errorWindow     = None
+
+
+def reporterrorstofile(file=None):
     global _errorReportFile
     _errorReportFile = file
+
 
 def displayerror(text):
     global _errorWindow
@@ -1429,16 +1492,18 @@ def displayerror(text):
 
         _errorWindow.showerror(text)
 
-_root = None
+
+_root                     = None
 _disableKeyboardWhileBusy = 1
 
+
 def initialise(
-        root = None,
-        size = None,
-        fontScheme = None,
-        useTkOptionDb = 0,
-        noBltBusy = 0,
-        disableKeyboardWhileBusy = None,
+        root=None,
+        size=None,
+        fontScheme=None,
+        useTkOptionDb=0,
+        noBltBusy=0,
+        disableKeyboardWhileBusy=None,
 ):
     # Remember if show/hidebusycursor should ignore keyboard events.
     global _disableKeyboardWhileBusy
@@ -1511,7 +1576,8 @@ def initialise(
 
     return root
 
-def alignlabels(widgets, sticky = None):
+
+def alignlabels(widgets, sticky=None):
     if len(widgets) == 0:
         return
 
@@ -1530,20 +1596,25 @@ def alignlabels(widgets, sticky = None):
         if sticky is not None:
             iwid.component('label').grid(sticky=sticky)
         iwid.grid_columnconfigure(0, minsize = maxLabelWidth)
-#=============================================================================
 
+
+#=============================================================================
 # Private routines
 #-----------------
 _callToTkReturned = 1
 _recursionCounter = 1
+
+
 
 class _TraceTk(object):
 
     def __init__(self, tclInterp):
         self.tclInterp = tclInterp
 
+
     def getTclInterp(self):
         return self.tclInterp
+
 
     # Calling from python into Tk.
     def call(self, *args, **kw):
@@ -1587,8 +1658,11 @@ class _TraceTk(object):
         _traceTkFile.flush()
         return result
 
+
     def __getattr__(self, key):
         return getattr(self.tclInterp, key)
+
+
 
 def _setTkInterps(window, tk):
     window.tk = tk
@@ -1596,7 +1670,6 @@ def _setTkInterps(window, tk):
       _setTkInterps(child, tk)
 
 #=============================================================================
-
 # Functions to display a busy cursor.  Keep a list of all toplevels
 # and display the busy cursor over them.  The list will contain the Tk
 # root toplevel window as well as all other toplevel windows.
@@ -1607,6 +1680,7 @@ def _setTkInterps(window, tk):
 #     {'isBusy', 'windowFocus', 'busyWindow',
 #         'excludeFromBusy', 'busyCursorName'}
 _toplevelBusyInfo = {}
+
 
 # Pmw needs to know all toplevel windows, so that it can call blt busy
 # on them.  This is a hack so we get notified when a Tk topevel is
@@ -1621,12 +1695,13 @@ def _addToplevelBusyInfo(window):
         busyWindow = window._w + '._Busy'
 
     _toplevelBusyInfo[window] = {
-        'isBusy' : 0,
-        'windowFocus' : None,
-        'busyWindow' : busyWindow,
-        'excludeFromBusy' : 0,
-        'busyCursorName' : None,
+        'isBusy':          0,
+        'windowFocus':     None,
+        'busyWindow':      busyWindow,
+        'excludeFromBusy': 0,
+        'busyCursorName':  None,
     }
+
 
 def __TkinterToplevelTitle(self, *args):
     # If this is being called from the constructor, include this
@@ -1640,7 +1715,10 @@ def __TkinterToplevelTitle(self, *args):
 
     return Tkinter.Wm.title(*(self,) + args)
 
+
 _haveBltBusy = None
+
+
 def _havebltbusy(window):
     global _busy_hold, _busy_release, _haveBltBusy
     if _haveBltBusy is None:
@@ -1656,10 +1734,12 @@ def _havebltbusy(window):
             _busy_release = PmwBlt.busy_release
     return _haveBltBusy
 
+
+
 class _BusyWrapper(object):
 
     def __init__(self, command, updateFunction):
-        self._command = command
+        self._command        = command
         self._updateFunction = updateFunction
 
     def callback(self, *args):
@@ -1676,7 +1756,7 @@ class _BusyWrapper(object):
 
 #=============================================================================
 
-def drawarrow(canvas, color, direction, tag, baseOffset = 0.25, edgeOffset = 0.15):
+def drawarrow(canvas, color, direction, tag, baseOffset=0.25, edgeOffset=0.15):
     canvas.delete(tag)
 
     bw = (int(canvas['borderwidth']) +
@@ -1713,14 +1793,15 @@ def drawarrow(canvas, color, direction, tag, baseOffset = 0.25, edgeOffset = 0.1
     kw = {'fill' : color, 'outline' : color, 'tag' : tag}
     canvas.create_polygon(*coords, **kw)
 
-#=============================================================================
 
+#=============================================================================
 # Modify the Tkinter destroy methods so that it notifies us when a Tk
 # toplevel or frame is destroyed.
 
 # A map from the 'hull' component of a megawidget to the megawidget.
 # This is used to clean up a megawidget when its hull is destroyed.
 _hullToMegaWidget = {}
+
 
 def __TkinterToplevelDestroy(tkWidget):
     if tkWidget in _hullToMegaWidget:
@@ -1740,6 +1821,7 @@ def __TkinterToplevelDestroy(tkWidget):
             del tkWidget._Pmw_WM_DELETE_name
         Tkinter.BaseWidget.destroy(tkWidget)
 
+
 def __TkinterWidgetDestroy(tkWidget):
     if tkWidget in _hullToMegaWidget:
         mega = _hullToMegaWidget[tkWidget]
@@ -1750,16 +1832,16 @@ def __TkinterWidgetDestroy(tkWidget):
     else:
         Tkinter.BaseWidget.destroy(tkWidget)
 
-#=============================================================================
 
+#=============================================================================
 # Add code to Tkinter to improve the display of errors which occur in
 # callbacks.
 
 class __TkinterCallWrapper(object):
 
     def __init__(self, func, subst, widget):
-        self.func = func
-        self.subst = subst
+        self.func   = func
+        self.subst  = subst
         self.widget = widget
 
     # Calling back from Tk into python.
@@ -1794,21 +1876,23 @@ class __TkinterCallWrapper(object):
         except:
             _reporterror(self.func, args)
 
+
 _eventTypeToName = {
-    2 : 'KeyPress',         15 : 'VisibilityNotify',   28 : 'PropertyNotify',
-    3 : 'KeyRelease',       16 : 'CreateNotify',       29 : 'SelectionClear',
-    4 : 'ButtonPress',      17 : 'DestroyNotify',      30 : 'SelectionRequest',
-    5 : 'ButtonRelease',    18 : 'UnmapNotify',        31 : 'SelectionNotify',
-    6 : 'MotionNotify',     19 : 'MapNotify',          32 : 'ColormapNotify',
-    7 : 'EnterNotify',      20 : 'MapRequest',         33 : 'ClientMessage',
-    8 : 'LeaveNotify',      21 : 'ReparentNotify',     34 : 'MappingNotify',
-    9 : 'FocusIn',          22 : 'ConfigureNotify',    35 : 'VirtualEvents',
-    10 : 'FocusOut',        23 : 'ConfigureRequest',   36 : 'ActivateNotify',
-    11 : 'KeymapNotify',    24 : 'GravityNotify',      37 : 'DeactivateNotify',
-    12 : 'Expose',          25 : 'ResizeRequest',      38 : 'MouseWheelEvent',
-    13 : 'GraphicsExpose',  26 : 'CirculateNotify',
-    14 : 'NoExpose',        27 : 'CirculateRequest',
+    2:  'KeyPress',       15: 'VisibilityNotify', 28: 'PropertyNotify',
+    3:  'KeyRelease',     16: 'CreateNotify',     29: 'SelectionClear',
+    4:  'ButtonPress',    17: 'DestroyNotify',    30: 'SelectionRequest',
+    5:  'ButtonRelease',  18: 'UnmapNotify',      31: 'SelectionNotify',
+    6:  'MotionNotify',   19: 'MapNotify',        32: 'ColormapNotify',
+    7:  'EnterNotify',    20: 'MapRequest',       33: 'ClientMessage',
+    8:  'LeaveNotify',    21: 'ReparentNotify',   34: 'MappingNotify',
+    9:  'FocusIn',        22: 'ConfigureNotify',  35: 'VirtualEvents',
+    10: 'FocusOut',       23: 'ConfigureRequest', 36: 'ActivateNotify',
+    11: 'KeymapNotify',   24: 'GravityNotify',    37: 'DeactivateNotify',
+    12: 'Expose',         25: 'ResizeRequest',    38: 'MouseWheelEvent',
+    13: 'GraphicsExpose', 26: 'CirculateNotify',
+    14: 'NoExpose',       27: 'CirculateRequest',
 }
+
 
 def _reporterror(func, args):
     # Fetch current exception values.
@@ -1859,13 +1943,15 @@ def _reporterror(func, args):
     except:
         pass
 
+
+
 class _ErrorWindow(object):
 
     def __init__(self):
 
-        self._errorQueue = []
-        self._errorCount = 0
-        self._open = 0
+        self._errorQueue   = []
+        self._errorCount   = 0
+        self._open         = 0
         self._firstShowing = 1
 
         # Create the toplevel window
@@ -1900,8 +1986,9 @@ class _ErrorWindow(object):
 
         # Pack the lower frame first so that it does not disappear
         # when the window is resized.
-        lowerframe.pack(side = 'bottom', fill = 'x')
-        upperframe.pack(side = 'bottom', fill = 'both', expand = 1)
+        lowerframe.pack(side='bottom', fill='x')
+        upperframe.pack(side='bottom', fill='both', expand=1)
+
 
     def showerror(self, text):
         if self._open:
@@ -1947,11 +2034,13 @@ class _ErrorWindow(object):
         # Release any grab, so that buttons in the error window work.
         releasegrabs()
 
+
     def _hide(self):
         self._errorCount = self._errorCount + len(self._errorQueue)
         self._errorQueue = []
         self._top.withdraw()
         self._open = 0
+
 
     def _next(self):
         # Display the next error in the queue.
@@ -1962,11 +2051,13 @@ class _ErrorWindow(object):
         self._display(text)
         self._updateButtons()
 
+
     def _display(self, text):
         self._errorCount = self._errorCount + 1
         text = 'Error: %d\n%s' % (self._errorCount, text)
         self._text.delete('1.0', 'end')
         self._text.insert('end', text)
+
 
     def _updateButtons(self):
         numQueued = len(self._errorQueue)
@@ -1998,7 +2089,7 @@ except ImportError:
 
 class Dialog(MegaToplevel):
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
 
         # Define the megawidget options.
 
@@ -2075,11 +2166,14 @@ class Dialog(MegaToplevel):
         # Check keywords and initialise options.
         self.initialiseoptions()
 
+
     def interior(self):
         return self.__dialogChildSite
 
-    def invoke(self, index = DEFAULT):
+
+    def invoke(self, index=DEFAULT):
         return self._buttonBox.invoke(index)
+
 
     def _invokeDefault(self, event):
         try:
@@ -2088,7 +2182,8 @@ class Dialog(MegaToplevel):
             return
         self._buttonBox.invoke()
 
-    def _doCommand(self, name = None):
+
+    def _doCommand(self, name=None):
         if name is not None and self.active() and \
                 grabstacktopwindow() != self.component('hull'):
             # This is a modal dialog but is not on the top of the grab
@@ -2119,6 +2214,7 @@ class Dialog(MegaToplevel):
             else:
                 self.withdraw()
 
+
     def _buttons(self):
         buttons = self['buttons']
         if not isinstance(buttons, tuple) and not isinstance(buttons, list):
@@ -2148,6 +2244,7 @@ class Dialog(MegaToplevel):
                     self._buttonBox.setdefault(defaultbutton)
         self._buttonBox.alignbuttons()
 
+
     def _defaultButton(self):
         defaultbutton = self['defaultbutton']
         if self.oldDefault == defaultbutton:
@@ -2172,7 +2269,9 @@ class Dialog(MegaToplevel):
 
 import re
 
-def timestringtoseconds(text, separator = ':'):
+
+
+def timestringtoseconds(text, separator=':'):
   inputList = text.strip().split(separator)
   if len(inputList) != 3:
     raise ValueError('invalid value: ' + text)
@@ -2194,10 +2293,12 @@ def timestringtoseconds(text, separator = ':'):
     raise ValueError('invalid value: ' + text)
   return sign * (hour * 60 * 60 + minute * 60 + second)
 
-_year_pivot = 50
-_century = 2000
 
-def setyearpivot(pivot, century = None):
+_year_pivot = 50
+_century    = 2000
+
+
+def setyearpivot(pivot, century=None):
     global _year_pivot
     global _century
     oldvalues = (_year_pivot, _century)
@@ -2206,7 +2307,8 @@ def setyearpivot(pivot, century = None):
         _century = century
     return oldvalues
 
-def datestringtojdn(text, format = 'ymd', separator = '/'):
+
+def datestringtojdn(text, format='ymd', separator='/'):
   inputList = text.strip().split(separator)
   if len(inputList) != 3:
     raise ValueError('invalid value: ' + text)
@@ -2214,6 +2316,7 @@ def datestringtojdn(text, format = 'ymd', separator = '/'):
   if re.search('[^0-9]', ''.join(inputList)) is not None:
     raise ValueError('invalid value: ' + text)
   formatList = list(format)
+
   day   = int(inputList[formatList.index('d')])
   month = int(inputList[formatList.index('m')])
   year  = int(inputList[formatList.index('y')])
@@ -2230,6 +2333,7 @@ def datestringtojdn(text, format = 'ymd', separator = '/'):
     raise ValueError('invalid value: ' + text)
   return jdn
 
+
 def _cdiv(a, b):
     # Return a / b as calculated by most C language implementations,
     # assuming both a and b are integers.
@@ -2239,10 +2343,12 @@ def _cdiv(a, b):
     else:
         return -(abs(a) / abs(b))
 
+
 if sys.version_info[0] > 2:
     long = int
 
-def ymdtojdn(year, month, day, julian = -1, papal = 1):
+
+def ymdtojdn(year, month, day, julian=-1, papal=1):
 
     # set Julian flag if auto set
     if julian < 0:
@@ -2267,7 +2373,8 @@ def ymdtojdn(year, month, day, julian = -1, papal = 1):
             _cdiv((3 * _cdiv((year + long(4900) + _cdiv((month - 14), 12)), 100)), 4) + \
             1            # correction by rdg
 
-def jdntoymd(jdn, julian = -1, papal = 1):
+
+def jdntoymd(jdn, julian=-1, papal=1):
 
     # set Julian flag if auto set
     if julian < 0:
@@ -2308,7 +2415,8 @@ def jdntoymd(jdn, julian = -1, papal = 1):
 
     return (yy, mm, dd)
 
-def stringtoreal(text, separator = '.'):
+
+def stringtoreal(text, separator='.'):
     if separator != '.':
         if text.find('.') >= 0:
             raise ValueError('invalid value: ' + text)
@@ -2319,16 +2427,16 @@ def stringtoreal(text, separator = '.'):
 
 ######################################################################
 ### File: PmwBalloon.py
-import os
 try:
     import tkinter as Tkinter
 except ImportError:
     import Tkinter
 
 
+
 class Balloon(MegaToplevel):
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
 
         # Define the megawidget options.
         optiondefs = (
@@ -2381,13 +2489,15 @@ class Balloon(MegaToplevel):
         # Check keywords and initialise options.
         self.initialiseoptions()
 
+
     def destroy(self):
         if self._timer is not None:
             self.after_cancel(self._timer)
             self._timer = None
         MegaToplevel.destroy(self)
 
-    def bind(self, widget, balloonHelp, statusHelp = None):
+
+    def bind(self, widget, balloonHelp, statusHelp=None):
 
         # If a previous bind for this widget exists, remove it.
         self.unbind(widget)
@@ -2426,6 +2536,7 @@ class Balloon(MegaToplevel):
         widget._Pmw_BalloonBindIds[None] = \
                 (enterId, motionId, leaveId, buttonId, destroyId)
 
+
     def unbind(self, widget):
         if hasattr(widget, '_Pmw_BalloonBindIds'):
             if None in widget._Pmw_BalloonBindIds:
@@ -2452,7 +2563,8 @@ class Balloon(MegaToplevel):
                 self.clearstatus()
                 self._currentTrigger = None
 
-    def tagbind(self, widget, tagOrItem, balloonHelp, statusHelp = None):
+
+    def tagbind(self, widget, tagOrItem, balloonHelp, statusHelp=None):
 
         # If a previous bind for this widget's tagOrItem exists, remove it.
         self.tagunbind(widget, tagOrItem)
@@ -2478,6 +2590,7 @@ class Balloon(MegaToplevel):
             widget._Pmw_BalloonBindIds = {}
         widget._Pmw_BalloonBindIds[tagOrItem] = \
                 (enterId, motionId, leaveId, buttonId)
+
 
     def tagunbind(self, widget, tagOrItem):
         if hasattr(widget, '_Pmw_BalloonBindIds'):
@@ -2521,14 +2634,17 @@ class Balloon(MegaToplevel):
                     self.clearstatus()
                     self._currentTrigger = None
 
+
     def showstatus(self, statusHelp):
         if self['state'] in ('status', 'both'):
             cmd = self['statuscommand']
             if isinstance(cmd, collections.Callable):
                 cmd(statusHelp)
 
+
     def clearstatus(self):
         self.showstatus(None)
+
 
     def _state(self):
         if self['state'] not in ('both', 'balloon', 'status', 'none'):
@@ -2536,10 +2652,12 @@ class Balloon(MegaToplevel):
                 ': should be one of \'both\', \'balloon\', ' +
                 '\'status\' or \'none\'')
 
+
     def _relmouse(self):
         if self['relmouse'] not in ('both', 'x', 'y', 'none'):
             raise ValueError('bad relmouse option ' + repr(self['relmouse']) +
                 ': should be one of \'both\', \'x\', ' + '\'y\' or \'none\'')
+
 
     def _enter(self, event, widget, statusHelp, balloonHelp, isItem):
 
@@ -2578,6 +2696,7 @@ class Balloon(MegaToplevel):
 
         self.showstatus(statusHelp)
 
+
     def _leave(self, event):
         if self._timer is not None:
             self.after_cancel(self._timer)
@@ -2585,6 +2704,7 @@ class Balloon(MegaToplevel):
         self.withdraw()
         self.clearstatus()
         self._currentTrigger = None
+
 
     def _destroy(self, event):
 
@@ -2608,12 +2728,14 @@ class Balloon(MegaToplevel):
                 self.clearstatus()
                 self._currentTrigger = None
 
+
     def _buttonpress(self, event):
         if self._timer is not None:
             self.after_cancel(self._timer)
             self._timer = None
         self.withdraw()
         self._currentTrigger = None
+
 
     def _showBalloon(self, widget, balloonHelp, isItem):
 
@@ -2698,9 +2820,10 @@ except ImportError:
     import Tkinter
 
 
+
 class ButtonBox(MegaWidget):
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
 
         # Define the megawidget options.
 
@@ -2754,16 +2877,19 @@ class ButtonBox(MegaWidget):
         # Check keywords and initialise options.
         self.initialiseoptions()
 
+
     def destroy(self):
         if self._timerId:
             self.after_cancel(self._timerId)
             self._timerId = None
         MegaWidget.destroy(self)
 
+
     def numbuttons(self):
         return len(self._buttonList)
 
-    def index(self, index, forInsert = 0):
+
+    def index(self, index, forInsert=0):
         listLength = len(self._buttonList)
         if isinstance(index, int):
             if forInsert and index <= listLength:
@@ -2791,7 +2917,8 @@ class ButtonBox(MegaWidget):
             raise ValueError(
                 'bad index "%s": must be %s' % (index, validValues))
 
-    def insert(self, componentName, beforeComponent = 0, **kw):
+
+    def insert(self, componentName, beforeComponent=0, **kw):
         if componentName in self.components():
             raise ValueError('button "%s" already exists' % componentName)
         if 'text' not in kw:
@@ -2829,8 +2956,10 @@ class ButtonBox(MegaWidget):
 
         return button
 
+
     def add(self, componentName, **kw):
         return self.insert(*(componentName, len(self._buttonList)), **kw)
+
 
     def delete(self, index):
         index = self.index(index)
@@ -2858,6 +2987,7 @@ class ButtonBox(MegaWidget):
             self._buttonBoxFrame.grid_rowconfigure(numButtons * 2, weight = 0)
         del self._buttonList[index]
 
+
     def setdefault(self, index):
         # Turn off the default ring around the current default button.
         if self._defaultButton is not None:
@@ -2872,7 +3002,8 @@ class ButtonBox(MegaWidget):
             button = self._buttonList[index][1]
             button.configure(default = 'active')
 
-    def invoke(self, index = DEFAULT, noFlash = 0):
+
+    def invoke(self, index=DEFAULT, noFlash=0):
         # Invoke the callback associated with the *index* button.  If
         # *noFlash* is not set, flash the button to indicate to the
         # user that something happened.
@@ -2887,10 +3018,12 @@ class ButtonBox(MegaWidget):
             button.configure(state = state, relief = relief)
         return button.invoke()
 
+
     def button(self, buttonIndex):
         return self._buttonList[self.index(buttonIndex)][1]
 
-    def alignbuttons(self, when = 'later'):
+
+    def alignbuttons(self, when='later'):
         if when == 'later':
             if not self._timerId:
                 self._timerId = self.after_idle(self.alignbuttons, 'now')
@@ -2931,15 +3064,17 @@ except ImportError:
 
 
 # Possible return values of validation functions.
-OK = 1
-ERROR = 0
+OK      = 1
+ERROR   = 0
 PARTIAL = -1
+
+
 
 class EntryField(MegaWidget):
 
     _classBindingsDefinedFor = 0
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
 
         # Define the megawidget options.
 
@@ -3015,9 +3150,11 @@ class EntryField(MegaWidget):
         # Check keywords and initialise options.
         self.initialiseoptions()
 
+
     def destroy(self):
         _deregisterEntryField(self._entryFieldEntry)
         MegaWidget.destroy(self)
+
 
     def _getValidatorFunc(self, validator, index):
         # Search the extra and standard validator lists for the
@@ -3039,13 +3176,14 @@ class EntryField(MegaWidget):
             if validator in traversedValidators:
                 return validator
 
+
     def _validate(self):
         _dict = {
-            'validator' : None,
-            'min' : None,
-            'max' : None,
-            'minstrict' : 1,
-            'maxstrict' : 1,
+            'validator': None,
+            'min':       None,
+            'max':       None,
+            'minstrict': 1,
+            'maxstrict': 1,
         }
         opt = self['validate']
         if isinstance(opt, dict):
@@ -3091,6 +3229,7 @@ class EntryField(MegaWidget):
 
         self._checkValidity()
 
+
     def _checkValidateFunction(self, function, option, validator):
         # Raise an error if 'function' is not a function or None.
 
@@ -3102,7 +3241,8 @@ class EntryField(MegaWidget):
                 'the standard validators %s or extra validators %s'
             raise ValueError(msg % (option, validator, standard, extra))
 
-    def _executeCommand(self, event = None):
+
+    def _executeCommand(self, event=None):
         cmd = self['command']
         if isinstance(cmd, collections.Callable):
             if event is None:
@@ -3110,6 +3250,7 @@ class EntryField(MegaWidget):
                 return cmd()
             else:
                 cmd()
+
 
     def _preProcess(self):
 
@@ -3121,6 +3262,7 @@ class EntryField(MegaWidget):
                 self._entryFieldEntry.index('sel.last'))
         else:
             self._previousSel = None
+
 
     def _postProcess(self):
 
@@ -3139,6 +3281,7 @@ class EntryField(MegaWidget):
             cmd()
         return valid
 
+
     def checkentry(self):
         # If there is a variable specified by the entry_textvariable
         # option, checkentry() should be called after the set() method
@@ -3146,6 +3289,7 @@ class EntryField(MegaWidget):
 
         self._previousText = None
         return self._postProcess()
+
 
     def _getValidity(self):
         text = self._entryFieldEntry.get()
@@ -3175,6 +3319,7 @@ class EntryField(MegaWidget):
                 else:
                     return PARTIAL
         return OK
+
 
     def _checkValidity(self):
         valid = self._getValidity()
@@ -3221,14 +3366,18 @@ class EntryField(MegaWidget):
 
         return oldValidity
 
+
     def invoke(self):
         return self._executeCommand()
+
 
     def valid(self):
         return self._valid == OK
 
+
     def clear(self):
         self.setentry('')
+
 
     def __setEntry(self, text):
         oldState = str(self._entryFieldEntry.cget('state'))
@@ -3239,27 +3388,31 @@ class EntryField(MegaWidget):
         if oldState != 'normal':
             self._entryFieldEntry.configure(state=oldState)
 
+
     def setentry(self, text):
         self._preProcess()
         self.__setEntry(text)
         return self._postProcess()
 
+
     def getvalue(self):
         return self._entryFieldEntry.get()
+
 
     def setvalue(self, text):
         return self.setentry(text)
 
+
+
 forwardmethods(EntryField, Tkinter.Entry, '_entryFieldEntry')
 
 # ======================================================================
-
-
 # Entry field validation functions
 
-_numericregex = re.compile('^[0-9]*$')
-_alphabeticregex = re.compile('^[a-z]*$', re.IGNORECASE)
+_numericregex      = re.compile('^[0-9]*$')
+_alphabeticregex   = re.compile('^[a-z]*$', re.IGNORECASE)
 _alphanumericregex = re.compile('^[0-9a-z]*$', re.IGNORECASE)
+
 
 def numericvalidator(text):
     if text == '':
@@ -3270,6 +3423,7 @@ def numericvalidator(text):
         else:
             return OK
 
+
 def integervalidator(text):
     if text in ('', '-', '+'):
         return PARTIAL
@@ -3279,17 +3433,20 @@ def integervalidator(text):
     except ValueError:
         return ERROR
 
+
 def alphabeticvalidator(text):
     if _alphabeticregex.match(text) is None:
         return ERROR
     else:
         return OK
 
+
 def alphanumericvalidator(text):
     if _alphanumericregex.match(text) is None:
         return ERROR
     else:
         return OK
+
 
 def hexadecimalvalidator(text):
     if text in ('', '0x', '0X', '+', '+0x', '+0X', '-', '-0x', '-0X'):
@@ -3300,7 +3457,8 @@ def hexadecimalvalidator(text):
     except ValueError:
         return ERROR
 
-def realvalidator(text, separator = '.'):
+
+def realvalidator(text, separator='.'):
     if separator != '.':
         if text.find('.') >= 0:
             return ERROR
@@ -3323,7 +3481,8 @@ def realvalidator(text, separator = '.'):
         except ValueError:
             return ERROR
 
-def timevalidator(text, separator = ':'):
+
+def timevalidator(text, separator=':'):
     try:
         timestringtoseconds(text, separator)
         return OK
@@ -3334,7 +3493,8 @@ def timevalidator(text, separator = ':'):
             return ERROR
         return PARTIAL
 
-def datevalidator(text, format = 'ymd', separator = '/'):
+
+def datevalidator(text, format='ymd', separator='/'):
     try:
         datestringtojdn(text, format, separator)
         return OK
@@ -3343,32 +3503,37 @@ def datevalidator(text, format = 'ymd', separator = '/'):
             return ERROR
         return PARTIAL
 
+
 _standardValidators = {
-    'numeric'      : (numericvalidator,      long),
-    'integer'      : (integervalidator,      long),
-    'hexadecimal'  : (hexadecimalvalidator,  lambda s: long(s, 16)),
-    'real'         : (realvalidator,         stringtoreal),
-    'alphabetic'   : (alphabeticvalidator,   len),
-    'alphanumeric' : (alphanumericvalidator, len),
-    'time'         : (timevalidator,         timestringtoseconds),
-    'date'         : (datevalidator,         datestringtojdn),
+    'numeric':      (numericvalidator,      long),
+    'integer':      (integervalidator,      long),
+    'hexadecimal':  (hexadecimalvalidator,  lambda s: long(s, 16)),
+    'real':         (realvalidator,         stringtoreal),
+    'alphabetic':   (alphabeticvalidator,   len),
+    'alphanumeric': (alphanumericvalidator, len),
+    'time':         (timevalidator,         timestringtoseconds),
+    'date':         (datevalidator,         datestringtojdn),
 }
 
 _entryCache = {}
+
 
 def _registerEntryField(entry, entryField):
     # Register an EntryField widget for an Entry widget
 
     _entryCache[entry] = entryField
 
+
 def _deregisterEntryField(entry):
     # Deregister an Entry widget
     del _entryCache[entry]
+
 
 def _preProcess(event):
     # Forward preprocess events for an Entry to it's EntryField
 
     _entryCache[event.widget]._preProcess()
+
 
 def _postProcess(event):
     # Forward postprocess events for an Entry to it's EntryField
@@ -3384,6 +3549,7 @@ try:
     import tkinter as Tkinter
 except ImportError:
     import Tkinter
+
 
 
 def aligngrouptags(groups):
@@ -3410,9 +3576,11 @@ def aligngrouptags(groups):
         if group._tag is not None:
             group._tag.place(y = maxTagHeight / 2)
 
+
+
 class Group(MegaWidget):
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
 
         # Define the megawidget options.
 
@@ -3476,6 +3644,7 @@ class Group(MegaWidget):
         # Check keywords and initialise options.
         self.initialiseoptions()
 
+
     def toggle(self):
         if self.showing:
             self.collapse()
@@ -3483,8 +3652,10 @@ class Group(MegaWidget):
             self.expand()
         self.showing = not self.showing
 
+
     def expand(self):
         self._groupChildSite.grid(column = 0, row = 1, sticky = 'nsew')
+
 
     def collapse(self):
         self._groupChildSite.grid_forget()
@@ -3493,6 +3664,7 @@ class Group(MegaWidget):
         else:
             tagHeight = self._tag.winfo_reqheight()
         self._ring.configure(height=(tagHeight / 2) + self['collapsedsize'])
+
 
     def interior(self):
         return self._groupChildSite
@@ -3505,16 +3677,17 @@ except ImportError:
     import Tkinter
 
 
+
 class LabeledWidget(MegaWidget):
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
 
         # Define the megawidget options.
 
         optiondefs = (
-            ('labelmargin',            0,      INITOPT),
-            ('labelpos',               None,   INITOPT),
-            ('sticky',                 'nsew', INITOPT),
+            ('labelmargin', 0,      INITOPT),
+            ('labelpos',    None,   INITOPT),
+            ('sticky',      'nsew', INITOPT),
         )
         self.defineoptions(kw, optiondefs)
 
@@ -3527,13 +3700,15 @@ class LabeledWidget(MegaWidget):
                 (), None,
                 Tkinter.Frame, (interior,))
         self._labelChildSite.grid(column=2, row=2, sticky=self['sticky'])
+
         interior.grid_columnconfigure(2, weight=1)
-        interior.grid_rowconfigure(2, weight=1)
+        interior.grid_rowconfigure(2,    weight=1)
 
         self.createlabel(interior)
 
         # Check keywords and initialise options.
         self.initialiseoptions()
+
 
     def interior(self):
         return self._labelChildSite
@@ -3549,9 +3724,10 @@ except ImportError:
     import Tkinter
 
 
+
 class MainMenuBar(MegaArchetype):
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
 
         # Define the megawidget options.
 
@@ -3581,17 +3757,19 @@ class MainMenuBar(MegaArchetype):
         # Check keywords and initialise options.
         self.initialiseoptions()
 
-    def deletemenuitems(self, menuName, start, end = None):
+
+    def deletemenuitems(self, menuName, start, end=None):
         self.component(menuName).delete(start, end)
         if end is None:
             del self._menuInfo[menuName][1][start]
         else:
             self._menuInfo[menuName][1][start:end+1] = []
 
+
     def deletemenu(self, menuName):
         """Delete should be called for cascaded menus before main menus.
-        """
 
+        """
         parentName = self._menuInfo[menuName][0]
         del self._menuInfo[menuName]
         if parentName is None:
@@ -3611,28 +3789,33 @@ class MainMenuBar(MegaArchetype):
 
         self.destroycomponent(menuName)
 
+
     def disableall(self):
         for index in range(len(self._menuInfo[None][1])):
             self.entryconfigure(index, state = 'disabled')
+
 
     def enableall(self):
         for index in range(len(self._menuInfo[None][1])):
             self.entryconfigure(index, state = 'normal')
 
-    def addmenu(self, menuName, balloonHelp, statusHelp = None,
-            traverseSpec = None, **kw):
+
+    def addmenu(self, menuName, balloonHelp, statusHelp=None,
+                traverseSpec=None, **kw):
         if statusHelp is None:
             statusHelp = balloonHelp
         self._addmenu(None, menuName, balloonHelp, statusHelp,
             traverseSpec, kw)
 
+
     def addcascademenu(self, parentMenuName, menuName, statusHelp='',
-            traverseSpec = None, **kw):
+                       traverseSpec=None, **kw):
         self._addmenu(parentMenuName, menuName, None, statusHelp,
             traverseSpec, kw)
 
+
     def _addmenu(self, parentMenuName, menuName, balloonHelp, statusHelp,
-            traverseSpec, kw):
+                 traverseSpec, kw):
 
         if (menuName) in self.components():
             raise ValueError('menu "%s" already exists' % menuName)
@@ -3676,8 +3859,9 @@ class MainMenuBar(MegaArchetype):
             lambda event=None, self=self, menuName=menuName:
                     self._menuHelp(event, menuName))
 
-    def addmenuitem(self, menuName, itemType, statusHelp = '',
-            traverseSpec = None, **kw):
+
+    def addmenuitem(self, menuName, itemType, statusHelp='',
+                    traverseSpec=None, **kw):
 
         menu = self.component(menuName)
         if itemType != 'separator':
@@ -3698,6 +3882,7 @@ class MainMenuBar(MegaArchetype):
 
         self._menuInfo[menuName][1].append(statusHelp)
         command(**kw)
+
 
     def _addHotkeyToOptions(self, menuName, kw, traverseSpec):
 
@@ -3744,6 +3929,7 @@ class MainMenuBar(MegaArchetype):
                     kw['underline'] = letter_index
                     break
 
+
     def _menuHelp(self, event, menuName):
         if menuName is None:
             menu = self._menu
@@ -3763,10 +3949,13 @@ class MainMenuBar(MegaArchetype):
                     help = self._menuInfo[menuName][1][index]
                     balloon.showstatus(help)
 
+
     def _resetHelpmessage(self, event=None):
         balloon = self['balloon']
         if balloon is not None:
             balloon.clearstatus()
+
+
 
 forwardmethods(MainMenuBar, Tkinter.Menu, '_hull')
 
@@ -3784,7 +3973,7 @@ except ImportError:
 
 class MenuBar(MegaWidget):
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
 
         # Define the megawidget options.
 
@@ -3813,12 +4002,14 @@ class MenuBar(MegaWidget):
         # Check keywords and initialise options.
         self.initialiseoptions()
 
-    def deletemenuitems(self, menuName, start, end = None):
+
+    def deletemenuitems(self, menuName, start, end=None):
         self.component(menuName + '-menu').delete(start, end)
         if end is None:
             del self._menuInfo[menuName][1][start]
         else:
             self._menuInfo[menuName][1][start:end+1] = []
+
 
     def deletemenu(self, menuName):
         """Delete should be called for cascaded menus before main menus.
@@ -3849,11 +4040,13 @@ class MenuBar(MegaWidget):
 
         self.destroycomponent(menuName + '-menu')
 
+
     def disableall(self):
         for menuName in self._menuInfo.keys():
             if self._menuInfo[menuName][0] is None:
                 menubutton = self.component(menuName + '-button')
                 menubutton.configure(state = 'disabled')
+
 
     def enableall(self):
         for menuName in self._menuInfo.keys():
@@ -3861,20 +4054,23 @@ class MenuBar(MegaWidget):
                 menubutton = self.component(menuName + '-button')
                 menubutton.configure(state = 'normal')
 
-    def addmenu(self, menuName, balloonHelp, statusHelp = None,
-            side = 'left', traverseSpec = None, **kw):
+
+    def addmenu(self, menuName, balloonHelp, statusHelp=None,
+                side='left', traverseSpec=None, **kw):
 
         self._addmenu(None, menuName, balloonHelp, statusHelp,
             traverseSpec, side, 'text', kw)
 
-    def addcascademenu(self, parentMenuName, menuName, statusHelp = '',
-            traverseSpec = None, **kw):
+
+    def addcascademenu(self, parentMenuName, menuName, statusHelp='',
+                       traverseSpec=None, **kw):
 
         self._addmenu(parentMenuName, menuName, None, statusHelp,
             traverseSpec, None, 'label', kw)
 
+
     def _addmenu(self, parentMenuName, menuName, balloonHelp, statusHelp,
-            traverseSpec, side, textKey, kw):
+                 traverseSpec, side, textKey, kw):
 
         if (menuName + '-menu') in self.components():
             raise ValueError('menu "%s" already exists' % menuName)
@@ -3924,8 +4120,9 @@ class MenuBar(MegaWidget):
 
         self._menuInfo[menuName] = (parentMenuName, [], bindId)
 
-    def addmenuitem(self, menuName, itemType, statusHelp = '',
-            traverseSpec = None, **kw):
+
+    def addmenuitem(self, menuName, itemType, statusHelp='',
+                    traverseSpec=None, **kw):
 
         menu = self.component(menuName + '-menu')
         if itemType != 'separator':
@@ -3946,6 +4143,7 @@ class MenuBar(MegaWidget):
 
         self._menuInfo[menuName][1].append(statusHelp)
         command(**kw)
+
 
     def _addHotkeyToOptions(self, menuName, kw, textKey, traverseSpec):
 
@@ -4000,6 +4198,7 @@ class MenuBar(MegaWidget):
                     kw['underline'] = letter_index
                     break
 
+
     def _menuHelp(self, menuName):
         menu = self.component(menuName + '-menu')
         index = menu.index('active')
@@ -4014,6 +4213,7 @@ class MenuBar(MegaWidget):
                 if index >= 0:
                     h = self._menuInfo[menuName][1][index]
                     balloon.showstatus(h)
+
 
     def _resetHelpmessage(self, event=None):
         balloon = self['balloon']
@@ -4030,9 +4230,10 @@ except ImportError:
     import Tkinter
 
 
+
 class MessageBar(MegaWidget):
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
 
         # Define the megawidget options.
 
@@ -4090,12 +4291,14 @@ class MessageBar(MegaWidget):
         # Check keywords and initialise options.
         self.initialiseoptions()
 
+
     def destroy(self):
         for timerId in self._timer:
             if timerId is not None:
                 self.after_cancel(timerId)
         self._timer = [None] * self._numPriorities
         MegaWidget.destroy(self)
+
 
     def message(self, t, text):
         # Display a message in the message bar.
@@ -4129,11 +4332,13 @@ class MessageBar(MegaWidget):
             mseconds = int(showtime * 1000)
             self._timer[priority] = self.after(mseconds, _clearmessage)
 
+
     def helpmessage(self, text):
         if text is None:
             self.resetmessages('help')
         else:
             self.message('help', text)
+
 
     def resetmessages(self, t):
         priority = self['messagetypes'][t][0]
@@ -4144,12 +4349,14 @@ class MessageBar(MegaWidget):
             if thisPriority < priority and showtime != 0:
                 self._clearActivemessage(thisPriority)
 
+
     def _clearActivemessage(self, priority):
         self._activemessage[priority] = 0
         if self._timer[priority] is not None:
             self.after_cancel(self._timer[priority])
             self._timer[priority] = None
         self._redisplayInfoMessage()
+
 
     def _redisplayInfoMessage(self):
         text = ''
@@ -4163,9 +4370,11 @@ class MessageBar(MegaWidget):
 
         # Can't always use 'disabled', since this greys out text in Tk 8.4.2
         try:
-            self._messageBarEntry.configure(state = 'readonly')
+            self._messageBarEntry.configure(state='readonly')
         except Tkinter.TclError:
-            self._messageBarEntry.configure(state = 'disabled')
+            self._messageBarEntry.configure(state='disabled')
+
+
 
 forwardmethods(MessageBar, Tkinter.Entry, '_messageBarEntry')
 
@@ -4179,9 +4388,10 @@ except ImportError:
     import Tkinter
 
 
+
 class MessageDialog(Dialog):
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
 
         # Define the megawidget options.
 
@@ -4257,9 +4467,10 @@ except ImportError:
     import Tkinter
 
 
+
 class NoteBook(MegaArchetype):
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
 
         # Define the megawidget options.
 
@@ -4374,7 +4585,8 @@ class NoteBook(MegaArchetype):
         # Check keywords and initialise options.
         self.initialiseoptions()
 
-    def insert(self, pageName, before = 0, **kw):
+
+    def insert(self, pageName, before=0, **kw):
         if pageName in self._pageAttrs:
             msg = 'Page "%s" already exists.' % pageName
             raise ValueError(msg)
@@ -4410,12 +4622,13 @@ class NoteBook(MegaArchetype):
                 Tkinter.Frame, self._hull), **pageOptions)
 
         attributes = {}
-        attributes['page'] = page
+
+        attributes['page']    = page
         attributes['created'] = 0
 
         if self._withTabs:
             # Create the button for the tab.
-            def raiseThisPage(self = self, pageName = pageName):
+            def raiseThisPage(self=self, pageName=pageName):
                 self.selectpage(pageName)
             tabOptions['command'] = raiseThisPage
             tab = self.createcomponent(*(pageName + '-tab',
@@ -4424,24 +4637,25 @@ class NoteBook(MegaArchetype):
 
             if self['arrownavigation']:
                 # Allow the use of the arrow keys for Tab navigation:
-                def next(event, self = self, pageName = pageName):
+                def next(event, self=self, pageName=pageName):
                     self.nextpage(pageName)
-                def prev(event, self = self, pageName = pageName):
+                def prev(event, self=self, pageName=pageName):
                     self.previouspage(pageName)
-                tab.bind('<Left>', prev)
+                tab.bind('<Left>',  prev)
                 tab.bind('<Right>', next)
 
-            attributes['tabbutton'] = tab
-            attributes['tabreqwidth'] = tab.winfo_reqwidth()
+            attributes['tabbutton']    = tab
+            attributes['tabreqwidth']  = tab.winfo_reqwidth()
             attributes['tabreqheight'] = tab.winfo_reqheight()
 
             # Create the canvas item to manage the tab's button and the items
             # for the tab's shadow.
-            windowitem = self.create_window(0, 0, window = tab, anchor = 'nw')
+            windowitem  = self.create_window(0, 0, window=tab, anchor='nw')
             lightshadow = self.create_polygon(0, 0, 0, 0, 0, 0,
-                tags = 'lighttag', fill = self._lightBorderColor)
-            darkshadow = self.create_polygon(0, 0, 0, 0, 0, 0,
+                tags='lighttag', fill=self._lightBorderColor)
+            darkshadow  = self.create_polygon(0, 0, 0, 0, 0, 0,
                 tags = 'darktag', fill = self._darkBorderColor)
+
             attributes['tabitems'] = (windowitem, lightshadow, darkshadow)
             self._pending['tabs'] = 1
 
@@ -4457,15 +4671,18 @@ class NoteBook(MegaArchetype):
         self._layout()
         return page
 
+
     def add(self, pageName, **kw):
         return self.insert(*(pageName, len(self._pageNames)), **kw)
 
+
     def delete(self, *pageNames):
         newTopPage = 0
+
         for page in pageNames:
             pageIndex = self.index(page)
-            pageName = self._pageNames[pageIndex]
-            pageInfo = self._pageAttrs[pageName]
+            pageName  = self._pageNames[pageIndex]
+            pageInfo  = self._pageAttrs[pageName]
 
             if self.getcurselection() == pageName:
                 if len(self._pageNames) == 1:
@@ -4499,18 +4716,22 @@ class NoteBook(MegaArchetype):
             self._pending['tabs'] = 1
         self._layout()
 
+
     def page(self, pageIndex):
         pageName = self._pageNames[self.index(pageIndex)]
         return self._pageAttrs[pageName]['page']
 
+
     def pagenames(self):
         return list(self._pageNames)
+
 
     def getcurselection(self):
         if 'topPage' in self._pending:
             return self._pending['topPage']
         else:
             return self._topPageName
+
 
     def tab(self, pageIndex):
         if self._withTabs:
@@ -4519,7 +4740,8 @@ class NoteBook(MegaArchetype):
         else:
             return None
 
-    def index(self, index, forInsert = 0):
+
+    def index(self, index, forInsert=0):
         listLength = len(self._pageNames)
         if isinstance(index, int):
             if forInsert and index <= listLength:
@@ -4546,6 +4768,7 @@ class NoteBook(MegaArchetype):
             raise ValueError(
                 'bad index "%s": must be %s' % (index, validValues))
 
+
     def selectpage(self, page):
         pageName = self._pageNames[self.index(page)]
         oldTopPage = self.getcurselection()
@@ -4564,7 +4787,8 @@ class NoteBook(MegaArchetype):
         if self._withTabs and self['arrownavigation']:
             self._pageAttrs[pageName]['tabbutton'].focus_set()
 
-    def previouspage(self, pageIndex = None):
+
+    def previouspage(self, pageIndex=None):
         if pageIndex is None:
             curpage = self.index(SELECT)
         else:
@@ -4572,7 +4796,8 @@ class NoteBook(MegaArchetype):
         if curpage > 0:
             self.selectpage(curpage - 1)
 
-    def nextpage(self, pageIndex = None):
+
+    def nextpage(self, pageIndex=None):
         if pageIndex is None:
             curpage = self.index(SELECT)
         else:
@@ -4580,7 +4805,8 @@ class NoteBook(MegaArchetype):
         if curpage < len(self._pageNames) - 1:
             self.selectpage(curpage + 1)
 
-    def setnaturalsize(self, pageNames = None):
+
+    def setnaturalsize(self, pageNames=None):
         self.update_idletasks()
         maxPageWidth = 1
         maxPageHeight = 1
@@ -4609,19 +4835,23 @@ class NoteBook(MegaArchetype):
         # Note that, since the hull is a canvas, the width and height
         # options specify the geometry *inside* the borderwidth and
         # highlightthickness.
-        self.configure(hull_width = width, hull_height = height)
+        self.configure(hull_width=width, hull_height=height)
+
 
     def recolorborders(self):
         self._pending['borderColor'] = 1
         self._layout()
 
+
     def _handleMap(self, event):
         self._layout()
+
 
     def _handleConfigure(self, event):
         self._canvasSize = (event.width, event.height)
         self._pending['size'] = 1
         self._layout()
+
 
     def _raiseNewTop(self, pageName):
         if not self._pageAttrs[pageName]['created']:
@@ -4632,6 +4862,7 @@ class NoteBook(MegaArchetype):
         cmd = self['raisecommand']
         if cmd is not None:
             cmd(pageName)
+
 
     # This is the vertical layout of the notebook, from top (assuming
     # tabpos is 'n'):
@@ -4686,28 +4917,32 @@ class NoteBook(MegaArchetype):
             # Find total requested width and maximum requested height
             # of tabs.
             sumTabReqWidth = 0
-            maxTabHeight = 0
+            maxTabHeight   = 0
+
             for pageInfo in self._pageAttrs.values():
                 sumTabReqWidth = sumTabReqWidth + pageInfo['tabreqwidth']
                 if maxTabHeight < pageInfo['tabreqheight']:
                     maxTabHeight = pageInfo['tabreqheight']
+
             if maxTabHeight != 0:
                 # Add the top tab border plus a bit for the angled corners
                 self.tabBottom = canvasBorder + maxTabHeight + borderWidth * 1.5
 
             # Prepare for drawing the border around each tab button.
-            tabTop = canvasBorder
-            tabTop2 = tabTop + borderWidth
-            tabTop3 = tabTop + borderWidth * 1.5
+            tabTop     = canvasBorder
+            tabTop2    = tabTop + borderWidth
+            tabTop3    = tabTop + borderWidth * 1.5
             tabBottom2 = self.tabBottom
-            tabBottom = self.tabBottom + borderWidth
+            tabBottom  = self.tabBottom + borderWidth
 
             numTabs = len(self._pageNames)
+
             availableWidth = hullWidth - 2 * canvasBorder - \
                 numTabs * 2 * borderWidth
-            x = canvasBorder
+
+            x              = canvasBorder
             cumTabReqWidth = 0
-            cumTabWidth = 0
+            cumTabWidth    = 0
 
             # Position all the tabs.
             for pageName in self._pageNames:
@@ -4869,6 +5104,8 @@ class NoteBook(MegaArchetype):
 
         self._pending = {}
 
+
+
 # Need to do forwarding to get the pack, grid, etc methods.
 # Unfortunately this means that all the other canvas methods are also
 # forwarded.
@@ -4882,9 +5119,10 @@ except ImportError:
     import Tkinter
 
 
+
 class OptionMenu(MegaWidget):
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
 
         # Define the megawidget options.
 
@@ -4937,7 +5175,8 @@ class OptionMenu(MegaWidget):
         # Check keywords and initialise options.
         self.initialiseoptions()
 
-    def setitems(self, items, index = None):
+
+    def setitems(self, items, index=None):
 
         # Clean up old items and callback commands.
         for oldIndex in range(len(self._itemList)):
@@ -4971,6 +5210,7 @@ class OptionMenu(MegaWidget):
 
         self.setvalue(text)
 
+
     def getcurselection(self):
         var = str(self._menubutton.cget('textvariable'))
         if var == '':
@@ -4978,8 +5218,10 @@ class OptionMenu(MegaWidget):
         else:
             return self._menu.tk.globalgetvar(var)
 
+
     def getvalue(self):
         return self.getcurselection()
+
 
     def setvalue(self, text):
         var = str(self._menubutton.cget('textvariable'))
@@ -4987,6 +5229,7 @@ class OptionMenu(MegaWidget):
             self._menubutton.configure(text = text)
         else:
             self._menu.tk.globalsetvar(var, text)
+
 
     def index(self, index):
         listLength = len(self._itemList)
@@ -5011,11 +5254,13 @@ class OptionMenu(MegaWidget):
             raise ValueError('bad index "%s": must be a '
                 'name, a number, END or SELECT' % (index,))
 
-    def invoke(self, index = SELECT):
+
+    def invoke(self, index=SELECT):
         index = self.index(index)
-        text = self._itemList[index]
+        text  = self._itemList[index]
 
         return self._invoke(text)
+
 
     def _invoke(self, text):
         self.setvalue(text)
@@ -5036,9 +5281,10 @@ except ImportError:
     import Tkinter
 
 
+
 class PanedWidget(MegaWidget):
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
 
         # Define the megawidget options.
 
@@ -5064,34 +5310,36 @@ class PanedWidget(MegaWidget):
                 ': must be either \'horizontal\' or \'vertical\'')
 
         self._separatorThickness = self['separatorthickness']
-        self._handleSize = self['handlesize']
-        self._paneNames = []            # List of pane names
-        self._paneAttrs = {}            # Map from pane name to pane info
+        self._handleSize         = self['handlesize']
 
-        self._timerId = None
-        self._frame = {}
-        self._separator = []
-        self._button = []
-        self._totalSize = 0
-        self._movePending = 0
-        self._relsize = {}
-        self._relmin = {}
-        self._relmax = {}
-        self._size = {}
-        self._min = {}
-        self._max = {}
-        self._rootp = None
-        self._curSize = None
-        self._beforeLimit = None
-        self._afterLimit = None
+        self._paneNames = [] # List of pane names
+        self._paneAttrs = {} # Map from pane name to pane info
+
+        self._timerId      = None
+        self._frame        = {}
+        self._separator    = []
+        self._button       = []
+        self._totalSize    = 0
+        self._movePending  = 0
+        self._relsize      = {}
+        self._relmin       = {}
+        self._relmax       = {}
+        self._size         = {}
+        self._min          = {}
+        self._max          = {}
+        self._rootp        = None
+        self._curSize      = None
+        self._beforeLimit  = None
+        self._afterLimit   = None
         self._buttonIsDown = 0
-        self._majorSize = 100
-        self._minorSize = 100
+        self._majorSize    = 100
+        self._minorSize    = 100
 
         # Check keywords and initialise options.
         self.initialiseoptions()
 
-    def insert(self, name, before = 0, **kw):
+
+    def insert(self, name, before=0, **kw):
         # Parse <kw> for options.
         self._initPaneOptions(name)
         self._parsePaneOptions(name, kw)
@@ -5135,8 +5383,10 @@ class PanedWidget(MegaWidget):
         self._totalSize = self._totalSize + self._size[name]
         return self._frame[name]
 
+
     def add(self, name, **kw):
         return self.insert(*(name, len(self._paneNames)), **kw)
+
 
     def delete(self, name):
         deletePos = self._nameToIndex(name)
@@ -5160,12 +5410,15 @@ class PanedWidget(MegaWidget):
 
         self._plotHandles()
 
+
     def setnaturalsize(self):
         self.update_idletasks()
-        totalWidth = 0
+
+        totalWidth  = 0
         totalHeight = 0
-        maxWidth = 0
-        maxHeight = 0
+        maxWidth    = 0
+        maxHeight   = 0
+
         for name in self._paneNames:
             frame = self._frame[name]
             w = frame.winfo_reqwidth()
@@ -5182,7 +5435,9 @@ class PanedWidget(MegaWidget):
         # highlightthickness.
         bw = int(str(self.cget('hull_borderwidth')))
         hl = int(str(self.cget('hull_highlightthickness')))
+
         extra = (bw + hl) * 2
+
         if str(self.cget('orient')) == 'horizontal':
             totalWidth = totalWidth + extra
             maxHeight = maxHeight + extra
@@ -5193,7 +5448,8 @@ class PanedWidget(MegaWidget):
             maxWidth = maxWidth + extra
             self.configure(hull_width = maxWidth, hull_height = totalHeight)
 
-    def move(self, name, newPos, newPosOffset = 0):
+
+    def move(self, name, newPos, newPosOffset=0):
 
         # see if we can spare ourselves some work
         numPanes = len(self._paneNames)
@@ -5221,6 +5477,7 @@ class PanedWidget(MegaWidget):
         self._plotHandles()
         self._updateSizes()
 
+
     def _nameToIndex(self, nameOrIndex):
         try:
             pos = self._paneNames.index(nameOrIndex)
@@ -5229,14 +5486,16 @@ class PanedWidget(MegaWidget):
 
         return pos
 
+
     def _initPaneOptions(self, name):
         # Set defaults.
-        self._size[name] = 0
+        self._size[name]    = 0
         self._relsize[name] = None
-        self._min[name] = 0
-        self._relmin[name] = None
-        self._max[name] = 100000
-        self._relmax[name] = None
+        self._min[name]     = 0
+        self._relmin[name]  = None
+        self._max[name]     = 100000
+        self._relmax[name]  = None
+
 
     def _parsePaneOptions(self, name, args):
         # Parse <args> for options.
@@ -5256,21 +5515,25 @@ class PanedWidget(MegaWidget):
             else:
                 raise ValueError('keyword must be "size", "min", or "max"')
 
+
     def _absSize(self, relvalue):
         return int(round(relvalue * self._majorSize))
+
 
     def _sepName(self, n):
         return 'separator-%d' % n
 
+
     def _buttonName(self, n):
         return 'handle-%d' % n
+
 
     def _addSeparator(self):
         n = len(self._paneNames) - 1
 
-        downFunc = lambda event, s = self, num=n: s._btnDown(event, num)
-        upFunc = lambda event, s = self, num=n: s._btnUp(event, num)
-        moveFunc = lambda event, s = self, num=n: s._btnMove(event, num)
+        downFunc = lambda event, s=self, num=n: s._btnDown(event, num)
+        upFunc   = lambda event, s=self, num=n: s._btnUp(event,   num)
+        moveFunc = lambda event, s=self, num=n: s._btnMove(event, num)
 
         # Create the line dividing the panes.
         sep = self.createcomponent(self._sepName(n),
@@ -5280,9 +5543,9 @@ class PanedWidget(MegaWidget):
                 relief = self['separatorrelief'])
         self._separator.append(sep)
 
-        sep.bind('<ButtonPress-1>', downFunc)
+        sep.bind('<ButtonPress-1>',       downFunc)
         sep.bind('<Any-ButtonRelease-1>', upFunc)
-        sep.bind('<B1-Motion>', moveFunc)
+        sep.bind('<B1-Motion>',           moveFunc)
 
         if self['orient'] == 'vertical':
             cursor = 'sb_v_double_arrow'
@@ -5307,9 +5570,9 @@ class PanedWidget(MegaWidget):
                 )
         self._button.append(handle)
 
-        handle.bind('<ButtonPress-1>', downFunc)
+        handle.bind('<ButtonPress-1>',       downFunc)
         handle.bind('<Any-ButtonRelease-1>', upFunc)
-        handle.bind('<B1-Motion>', moveFunc)
+        handle.bind('<B1-Motion>',           moveFunc)
 
         self._plotHandles()
 
@@ -5317,6 +5580,7 @@ class PanedWidget(MegaWidget):
             self._separator[i].tkraise()
         for i in range(1, len(self._paneNames)):
             self._button[i].tkraise()
+
 
     def _btnUp(self, event, item):
         self._buttonIsDown = 0
@@ -5326,13 +5590,15 @@ class PanedWidget(MegaWidget):
         except:
             pass
 
+
     def _btnDown(self, event, item):
         self._button[item].configure(relief='sunken')
         self._getMotionLimit(item)
         self._buttonIsDown = 1
         self._movePending = 0
 
-    def _handleConfigure(self, event = None):
+
+    def _handleConfigure(self, event=None):
         self._getNaturalSizes()
         if self._totalSize == 0:
             return
@@ -5348,6 +5614,7 @@ class PanedWidget(MegaWidget):
 
         self._plotHandles()
         self._updateSizes()
+
 
     def _getNaturalSizes(self):
         # Must call this in order to get correct winfo_width, winfo_height
@@ -5405,16 +5672,19 @@ class PanedWidget(MegaWidget):
         self._totalSize = (self._totalSize +
                 (len(self._paneNames) - 1) * self._separatorThickness)
 
+
     def _setrel(self, name):
         if self._relsize[name] is not None:
             if self._majorSize != 0:
                 self._relsize[name] = round(self._size[name]) / self._majorSize
+
 
     def _iterate(self, names, proc, n):
         for i in names:
             n = proc(*(i, n))
             if n == 0:
                 break
+
 
     def _grow(self, name, n):
         canGrow = self._max[name] - self._size[name]
@@ -5430,6 +5700,7 @@ class PanedWidget(MegaWidget):
 
         return n
 
+
     def _shrink(self, name, n):
         canShrink = self._size[name] - self._min[name]
 
@@ -5443,6 +5714,7 @@ class PanedWidget(MegaWidget):
             n = n - canShrink
 
         return n
+
 
     def _updateSizes(self):
         totalSize = 0
@@ -5464,6 +5736,7 @@ class PanedWidget(MegaWidget):
         cmd = self['command']
         if isinstance(cmd, collections.Callable):
             cmd(map(lambda x, s = self: s._size[x], self._paneNames))
+
 
     def _plotHandles(self):
         if len(self._paneNames) == 0:
@@ -5537,20 +5810,25 @@ class PanedWidget(MegaWidget):
 
             totalSize = totalSize + nextSize + self._separatorThickness
 
+
     def pane(self, name):
         return self._frame[self._paneNames[self._nameToIndex(name)]]
+
 
     # Return the name of all panes
     def panes(self):
         return list(self._paneNames)
+
 
     def configurepane(self, name, **kw):
         name = self._paneNames[self._nameToIndex(name)]
         self._parsePaneOptions(name, kw)
         self._handleConfigure()
 
+
     def updatelayout(self):
         self._handleConfigure()
+
 
     def _getMotionLimit(self, item):
         curBefore = (item - 1) * self._separatorThickness
@@ -5577,6 +5855,7 @@ class PanedWidget(MegaWidget):
 
         self._plotHandles()
 
+
     # Compress the motion so that update is quick even on slow machines
     #
     # theRootp = root position (either rootx or rooty)
@@ -5588,11 +5867,13 @@ class PanedWidget(MegaWidget):
                     lambda s = self, i = item: s._btnMoveCompressed(i))
             self._movePending = 1
 
+
     def destroy(self):
         if self._timerId is not None:
           self.after_cancel(self._timerId)
           self._timerId = None
         MegaWidget.destroy(self)
+
 
     def _btnMoveCompressed(self, item):
         if not self._buttonIsDown:
@@ -5617,6 +5898,7 @@ class PanedWidget(MegaWidget):
         self.update_idletasks()
         self._movePending = 0
 
+
     # Calculate the change in response to mouse motions
     def _calculateChange(self, item, p):
 
@@ -5626,6 +5908,7 @@ class PanedWidget(MegaWidget):
             self._moveAfter(item, p)
 
         self._plotHandles()
+
 
     def _moveBefore(self, item, p):
         n = self._curSize - p
@@ -5640,6 +5923,7 @@ class PanedWidget(MegaWidget):
         self._iterate(iterRange, self._grow, n)
 
         self._curSize = p
+
 
     def _moveAfter(self, item, p):
         n = p - self._curSize
@@ -5665,7 +5949,7 @@ class PanedWidget(MegaWidget):
 
 class PromptDialog(Dialog):
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
         # Define the megawidget options.
 
         optiondefs = (
@@ -5698,15 +5982,20 @@ class PromptDialog(Dialog):
         # Check keywords and initialise options.
         self.initialiseoptions()
 
+
     # Supply aliases to some of the entry component methods.
     def insertentry(self, index, text):
         self._promptDialogEntry.insert(index, text)
 
+
     def deleteentry(self, first, last=None):
         self._promptDialogEntry.delete(first, last)
 
+
     def indexentry(self, index):
         return self._promptDialogEntry.index(index)
+
+
 
 forwardmethods(PromptDialog, EntryField, '_promptDialogEntry')
 
@@ -5718,12 +6007,13 @@ except ImportError:
     import Tkinter
 
 
+
 class RadioSelect(MegaWidget):
     # A collection of several buttons.  In single mode, only one
     # button may be selected.  In multiple mode, any number of buttons
     # may be selected.
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
 
         # Define the megawidget options.
 
@@ -5792,14 +6082,17 @@ class RadioSelect(MegaWidget):
         # Check keywords and initialise options.
         self.initialiseoptions()
 
+
     def getcurselection(self):
         if self._singleSelect:
             return self.selection
         else:
             return tuple(self.selection)
 
+
     def getvalue(self):
         return self.getcurselection()
+
 
     def setvalue(self, textOrList):
         if self._singleSelect:
@@ -5826,8 +6119,10 @@ class RadioSelect(MegaWidget):
                         else:  # Button
                             widget.configure(relief='sunken')
 
+
     def numbuttons(self):
         return len(self._buttonList)
+
 
     def index(self, index):
         # Return the integer index of the button with the given index.
@@ -5852,9 +6147,11 @@ class RadioSelect(MegaWidget):
             raise ValueError(
                 'bad index "%s": must be %s' % (index, validValues))
 
+
     def button(self, buttonIndex):
         name = self._buttonList[self.index(buttonIndex)]
         return self.component(name)
+
 
     def add(self, componentName, **kw):
         if componentName in self._buttonList:
@@ -5896,6 +6193,7 @@ class RadioSelect(MegaWidget):
         self._buttonList.append(componentName)
         return button
 
+
     def deleteall(self):
         for name in self._buttonList:
             self.destroycomponent(name)
@@ -5904,6 +6202,7 @@ class RadioSelect(MegaWidget):
             self.selection = None
         else:
             self.selection = []
+
 
     def __setSingleValue(self, value):
             self.selection = value
@@ -5917,6 +6216,7 @@ class RadioSelect(MegaWidget):
                         widget.configure(relief='sunken')
                     else:
                         widget.configure(relief='raised')
+
 
     def invoke(self, index):
         index = self.index(index)
@@ -5957,9 +6257,10 @@ except ImportError:
     import Tkinter
 
 
+
 class ScrolledCanvas(MegaWidget):
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
 
         # Define the megawidget options.
 
@@ -6034,16 +6335,17 @@ class ScrolledCanvas(MegaWidget):
         self.createlabel(self.origInterior, childCols = 3, childRows = 3)
 
         # Initialise instance variables.
-        self._horizScrollbarOn = 0
-        self._vertScrollbarOn = 0
-        self.scrollTimer = None
-        self._scrollRecurse = 0
+        self._horizScrollbarOn     = 0
+        self._vertScrollbarOn      = 0
+        self.scrollTimer           = None
+        self._scrollRecurse        = 0
         self._horizScrollbarNeeded = 0
-        self._vertScrollbarNeeded = 0
-        self.setregionTimer = None
+        self._vertScrollbarNeeded  = 0
+        self.setregionTimer        = None
 
         # Check keywords and initialise options.
         self.initialiseoptions()
+
 
     def destroy(self):
         if self.scrollTimer is not None:
@@ -6055,18 +6357,17 @@ class ScrolledCanvas(MegaWidget):
         MegaWidget.destroy(self)
 
     # ======================================================================
-
     # Public methods.
 
     def interior(self):
         return self._canvas
+
 
     def resizescrollregion(self):
         if self.setregionTimer is None:
             self.setregionTimer = self.after_idle(self._setRegion)
 
     # ======================================================================
-
     # Configuration methods.
 
     def _hscrollMode(self):
@@ -6089,6 +6390,7 @@ class ScrolledCanvas(MegaWidget):
 
         self._configureScrollCommands()
 
+
     def _vscrollMode(self):
         # The vertical scroll mode has been configured.
 
@@ -6110,7 +6412,6 @@ class ScrolledCanvas(MegaWidget):
         self._configureScrollCommands()
 
     # ======================================================================
-
     # Private methods.
 
     def _configureScrollCommands(self):
@@ -6137,6 +6438,7 @@ class ScrolledCanvas(MegaWidget):
                     yscrollcommand=self._scrollYNow
             )
 
+
     def _scrollXNow(self, first, last):
         self._horizScrollbar.set(first, last)
         self._horizScrollbarNeeded = ((first, last) != ('0', '1'))
@@ -6144,6 +6446,7 @@ class ScrolledCanvas(MegaWidget):
         if self['hscrollmode'] == 'dynamic':
             if self._horizScrollbarNeeded != self._horizScrollbarOn:
                 self._toggleHorizScrollbar()
+
 
     def _scrollYNow(self, first, last):
         self._vertScrollbar.set(first, last)
@@ -6153,12 +6456,14 @@ class ScrolledCanvas(MegaWidget):
             if self._vertScrollbarNeeded != self._vertScrollbarOn:
                 self._toggleVertScrollbar()
 
+
     def _scrollBothLater(self, first, last):
         # Called by the canvas to set the horizontal or vertical
         # scrollbar when it has scrolled or changed scrollregion.
 
         if self.scrollTimer is None:
             self.scrollTimer = self.after_idle(self._scrollBothNow)
+
 
     def _scrollBothNow(self):
         # This performs the function of _scrollXNow and _scrollYNow.
@@ -6204,6 +6509,7 @@ class ScrolledCanvas(MegaWidget):
             if self._vertScrollbarNeeded != self._vertScrollbarOn:
                 self._toggleVertScrollbar()
 
+
     def _toggleHorizScrollbar(self):
 
         self._horizScrollbarOn = not self._horizScrollbarOn
@@ -6215,6 +6521,7 @@ class ScrolledCanvas(MegaWidget):
         else:
             self._horizScrollbar.grid_forget()
             interior.grid_rowconfigure(3, minsize = 0)
+
 
     def _toggleVertScrollbar(self):
 
@@ -6228,6 +6535,7 @@ class ScrolledCanvas(MegaWidget):
             self._vertScrollbar.grid_forget()
             interior.grid_columnconfigure(3, minsize = 0)
 
+
     def _setRegion(self):
         self.setregionTimer = None
 
@@ -6238,10 +6546,13 @@ class ScrolledCanvas(MegaWidget):
                 region[2] + canvasmargin, region[3] + canvasmargin)
             self._canvas.configure(scrollregion = region)
 
+
     # Need to explicitly forward this to override the stupid
     # (grid_)bbox method inherited from Tkinter.Frame.Grid.
     def bbox(self, *args):
         return self._canvas.bbox(*args)
+
+
 
 forwardmethods(ScrolledCanvas, Tkinter.Canvas, '_canvas')
 
@@ -6253,9 +6564,10 @@ except ImportError:
     import Tkinter
 
 
+
 class ScrolledField(MegaWidget):
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
 
         # Define the megawidget options.
 
@@ -6291,6 +6603,7 @@ class ScrolledField(MegaWidget):
         # Check keywords and initialise options.
         self.initialiseoptions()
 
+
     def _text(self):
         text = self['text']
         self._scrolledFieldEntry.configure(state = 'normal')
@@ -6303,6 +6616,8 @@ class ScrolledField(MegaWidget):
         except Tkinter.TclError:
             self._scrolledFieldEntry.configure(state = 'disabled')
 
+
+
 forwardmethods(ScrolledField, Tkinter.Entry, '_scrolledFieldEntry')
 
 ######################################################################
@@ -6313,9 +6628,10 @@ except ImportError:
     import Tkinter
 
 
+
 class ScrolledFrame(MegaWidget):
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
 
         # Define the megawidget options.
 
@@ -6397,15 +6713,15 @@ class ScrolledFrame(MegaWidget):
         self.createlabel(self.origInterior, childCols = 3, childRows = 3)
 
         # Initialise instance variables.
-        self._horizScrollbarOn = 0
-        self._vertScrollbarOn = 0
-        self.scrollTimer = None
-        self._scrollRecurse = 0
+        self._horizScrollbarOn     = 0
+        self._vertScrollbarOn      = 0
+        self.scrollTimer           = None
+        self._scrollRecurse        = 0
         self._horizScrollbarNeeded = 0
-        self._vertScrollbarNeeded = 0
-        self.startX = 0
-        self.startY = 0
-        self._flexoptions = ('fixed', 'expand', 'shrink', 'elastic')
+        self._vertScrollbarNeeded  = 0
+        self.startX                = 0
+        self.startY                = 0
+        self._flexoptions          = ('fixed', 'expand', 'shrink', 'elastic')
 
         # Create a frame in the clipper to contain the widgets to be
         # scrolled.
@@ -6416,7 +6732,7 @@ class ScrolledFrame(MegaWidget):
 
         # Whenever the clipping window or scrolled frame change size,
         # update the scrollbars.
-        self._frame.bind('<Configure>', self._reposition)
+        self._frame.bind('<Configure>',   self._reposition)
         self._clipper.bind('<Configure>', self._reposition)
 
         # Work around a bug in Tk where the value returned by the
@@ -6424,10 +6740,11 @@ class ScrolledFrame(MegaWidget):
         # the expected 2-tuple.  This occurs if xview() is called soon
         # after the ScrolledFrame has been created.
         self._horizScrollbar.set(0.0, 1.0)
-        self._vertScrollbar.set(0.0, 1.0)
+        self._vertScrollbar.set(0.0,  1.0)
 
         # Check keywords and initialise options.
         self.initialiseoptions()
+
 
     def destroy(self):
         if self.scrollTimer is not None:
@@ -6436,11 +6753,11 @@ class ScrolledFrame(MegaWidget):
         MegaWidget.destroy(self)
 
     # ======================================================================
-
     # Public methods.
 
     def interior(self):
         return self._frame
+
 
     # Set timer to call real reposition method, so that it is not
     # called multiple times when many things are reconfigured at the
@@ -6449,10 +6766,11 @@ class ScrolledFrame(MegaWidget):
         if self.scrollTimer is None:
             self.scrollTimer = self.after_idle(self._scrollBothNow)
 
+
     # Called when the user clicks in the horizontal scrollbar.
     # Calculates new position of frame then calls reposition() to
     # update the frame and the scrollbar.
-    def xview(self, mode = None, value = None, units = None):
+    def xview(self, mode=None, value=None, units=None):
 
         if _myisstr(value):
             value = float(value)
@@ -6471,10 +6789,11 @@ class ScrolledFrame(MegaWidget):
 
         self.reposition()
 
+
     # Called when the user clicks in the vertical scrollbar.
     # Calculates new position of frame then calls reposition() to
     # update the frame and the scrollbar.
-    def yview(self, mode = None, value = None, units = None):
+    def yview(self, mode=None, value=None, units=None):
 
         if _myisstr(value):
             value = float(value)
@@ -6494,7 +6813,6 @@ class ScrolledFrame(MegaWidget):
         self.reposition()
 
     # ======================================================================
-
     # Configuration methods.
 
     def _hscrollMode(self):
@@ -6515,6 +6833,7 @@ class ScrolledFrame(MegaWidget):
             message = 'bad hscrollmode option "%s": should be static, dynamic, or none' % mode
             raise ValueError(message)
 
+
     def _vscrollMode(self):
         # The vertical scroll mode has been configured.
 
@@ -6533,6 +6852,7 @@ class ScrolledFrame(MegaWidget):
             message = 'bad vscrollmode option "%s": should be static, dynamic, or none' % mode
             raise ValueError(message)
 
+
     def _horizflex(self):
         # The horizontal flex mode has been configured.
 
@@ -6544,6 +6864,7 @@ class ScrolledFrame(MegaWidget):
             raise ValueError(message)
 
         self.reposition()
+
 
     def _vertflex(self):
         # The vertical flex mode has been configured.
@@ -6558,11 +6879,11 @@ class ScrolledFrame(MegaWidget):
         self.reposition()
 
     # ======================================================================
-
     # Private methods.
 
     def _reposition(self, event):
         self.reposition()
+
 
     def _getxview(self):
 
@@ -6600,6 +6921,7 @@ class ScrolledFrame(MegaWidget):
         self._frame.place(x = -self.startX, relwidth = relwidth)
         return (self.startX / float(frameWidth), endScrollX)
 
+
     def _getyview(self):
 
         # Vertical dimension.
@@ -6635,6 +6957,7 @@ class ScrolledFrame(MegaWidget):
         # Position frame relative to clipper.
         self._frame.place(y = -self.startY, relheight = relheight)
         return (self.startY / float(frameHeight), endScrollY)
+
 
     # According to the relative geometries of the frame and the
     # clipper, reposition the frame within the clipper and reset the
@@ -6681,6 +7004,7 @@ class ScrolledFrame(MegaWidget):
             if self._vertScrollbarNeeded != self._vertScrollbarOn:
                 self._toggleVertScrollbar()
 
+
     def _toggleHorizScrollbar(self):
 
         self._horizScrollbarOn = not self._horizScrollbarOn
@@ -6692,6 +7016,7 @@ class ScrolledFrame(MegaWidget):
         else:
             self._horizScrollbar.grid_forget()
             interior.grid_rowconfigure(3, minsize = 0)
+
 
     def _toggleVertScrollbar(self):
 
@@ -6715,11 +7040,12 @@ except ImportError:
     import Tkinter
 
 
+
 class ScrolledListBox(MegaWidget):
 
     _classBindingsDefinedFor = 0
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
 
         # Define the megawidget options.
 
@@ -6750,7 +7076,8 @@ class ScrolledListBox(MegaWidget):
                 (), None,
                 Tkinter.Listbox, (interior,))
         self._listbox.grid(row = 2, column = 2, sticky = 'news')
-        interior.grid_rowconfigure(2, weight = 1, minsize = 0)
+
+        interior.grid_rowconfigure(2,    weight = 1, minsize = 0)
         interior.grid_columnconfigure(2, weight = 1, minsize = 0)
 
         # Create the horizontal scrollbar
@@ -6811,15 +7138,16 @@ class ScrolledListBox(MegaWidget):
         self._listbox.bindtags(bindtags + (theTag,))
 
         # Initialise instance variables.
-        self._horizScrollbarOn = 0
-        self._vertScrollbarOn = 0
-        self.scrollTimer = None
-        self._scrollRecurse = 0
+        self._horizScrollbarOn     = 0
+        self._vertScrollbarOn      = 0
+        self.scrollTimer           = None
+        self._scrollRecurse        = 0
         self._horizScrollbarNeeded = 0
-        self._vertScrollbarNeeded = 0
+        self._vertScrollbarNeeded  = 0
 
         # Check keywords and initialise options.
         self.initialiseoptions()
+
 
     def destroy(self):
         if self.scrollTimer is not None:
@@ -6829,11 +7157,11 @@ class ScrolledListBox(MegaWidget):
         MegaWidget.destroy(self)
 
     # ======================================================================
-
     # Public methods.
 
     def clear(self):
         self.setlist(())
+
 
     def getcurselection(self):
         rtn = []
@@ -6841,8 +7169,10 @@ class ScrolledListBox(MegaWidget):
             rtn.append(self._listbox.get(sel))
         return tuple(rtn)
 
+
     def getvalue(self):
         return self.getcurselection()
+
 
     def setvalue(self, textOrList):
         self._listbox.selection_clear(0, 'end')
@@ -6859,12 +7189,14 @@ class ScrolledListBox(MegaWidget):
                 else:
                     raise ValueError('no such item "%s"' % item)
 
+
     def setlist(self, items):
         self._listbox.delete(0, 'end')
         if len(items) > 0:
             if not isinstance(items, tuple):
                 items = tuple(items)
             self._listbox.insert(*(0,) + items)
+
 
     # Override Tkinter.Listbox get method, so that if it is called with
     # no arguments, return all list elements (consistent with other widgets).
@@ -6875,7 +7207,6 @@ class ScrolledListBox(MegaWidget):
             return self._listbox.get(first, last)
 
     # ======================================================================
-
     # Configuration methods.
 
     def _hscrollMode(self):
@@ -6898,6 +7229,7 @@ class ScrolledListBox(MegaWidget):
 
         self._configureScrollCommands()
 
+
     def _vscrollMode(self):
         # The vertical scroll mode has been configured.
 
@@ -6919,7 +7251,6 @@ class ScrolledListBox(MegaWidget):
         self._configureScrollCommands()
 
     # ======================================================================
-
     # Private methods.
 
     def _configureScrollCommands(self):
@@ -6946,6 +7277,7 @@ class ScrolledListBox(MegaWidget):
                     yscrollcommand=self._scrollYNow
             )
 
+
     def _scrollXNow(self, first, last):
         self._horizScrollbar.set(first, last)
         self._horizScrollbarNeeded = ((first, last) != ('0', '1'))
@@ -6953,6 +7285,7 @@ class ScrolledListBox(MegaWidget):
         if self['hscrollmode'] == 'dynamic':
             if self._horizScrollbarNeeded != self._horizScrollbarOn:
                 self._toggleHorizScrollbar()
+
 
     def _scrollYNow(self, first, last):
         self._vertScrollbar.set(first, last)
@@ -6962,12 +7295,14 @@ class ScrolledListBox(MegaWidget):
             if self._vertScrollbarNeeded != self._vertScrollbarOn:
                 self._toggleVertScrollbar()
 
+
     def _scrollBothLater(self, first, last):
         # Called by the listbox to set the horizontal or vertical
         # scrollbar when it has scrolled or changed size or contents.
 
         if self.scrollTimer is None:
             self.scrollTimer = self.after_idle(self._scrollBothNow)
+
 
     def _scrollBothNow(self):
         # This performs the function of _scrollXNow and _scrollYNow.
@@ -7013,6 +7348,7 @@ class ScrolledListBox(MegaWidget):
             if self._vertScrollbarNeeded != self._vertScrollbarOn:
                 self._toggleVertScrollbar()
 
+
     def _toggleHorizScrollbar(self):
 
         self._horizScrollbarOn = not self._horizScrollbarOn
@@ -7025,6 +7361,7 @@ class ScrolledListBox(MegaWidget):
             self._horizScrollbar.grid_forget()
             interior.grid_rowconfigure(3, minsize = 0)
 
+
     def _toggleVertScrollbar(self):
 
         self._vertScrollbarOn = not self._vertScrollbarOn
@@ -7036,6 +7373,7 @@ class ScrolledListBox(MegaWidget):
         else:
             self._vertScrollbar.grid_forget()
             interior.grid_columnconfigure(3, minsize = 0)
+
 
     def _handleEvent(self, event, eventType):
         if eventType == 'double':
@@ -7054,15 +7392,19 @@ class ScrolledListBox(MegaWidget):
         if isinstance(command, collections.Callable):
             command()
 
+
     # Need to explicitly forward this to override the stupid
     # (grid_)size method inherited from Tkinter.Frame.Grid.
     def size(self):
         return self._listbox.size()
 
+
     # Need to explicitly forward this to override the stupid
     # (grid_)bbox method inherited from Tkinter.Frame.Grid.
     def bbox(self, index):
         return self._listbox.bbox(index)
+
+
 
 forwardmethods(ScrolledListBox, Tkinter.Listbox, '_listbox')
 
@@ -7070,14 +7412,17 @@ forwardmethods(ScrolledListBox, Tkinter.Listbox, '_listbox')
 
 _listboxCache = {}
 
+
 def _registerScrolledList(listbox, scrolledList):
     # Register an ScrolledList widget for a Listbox widget
 
     _listboxCache[listbox] = scrolledList
 
+
 def _deregisterScrolledList(listbox):
     # Deregister a Listbox widget
     del _listboxCache[listbox]
+
 
 def _handleEvent(event, eventType):
     # Forward events for a Listbox to it's ScrolledListBox
@@ -7097,9 +7442,10 @@ except ImportError:
     import Tkinter
 
 
+
 class ScrolledText(MegaWidget):
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
 
         # Define the megawidget options.
 
@@ -7135,19 +7481,19 @@ class ScrolledText(MegaWidget):
             self._borderframe = self.createcomponent('borderframe',
                     (), None,
                     Tkinter.Frame, (interior,),
-                    relief = 'sunken',
-                    borderwidth = 2,
+                    relief='sunken',
+                    borderwidth=2,
             )
-            self._borderframe.grid(row = 4, column = 4, sticky = 'news')
+            self._borderframe.grid(row=4, column=4, sticky='news')
 
             # Create the text widget.
             self._textbox = self.createcomponent('text',
                     (), None,
                     Tkinter.Text, (self._borderframe,),
-                    highlightthickness = 0,
-                    borderwidth = 0,
+                    highlightthickness=0,
+                    borderwidth=0,
             )
-            self._textbox.pack(fill = 'both', expand = 1)
+            self._textbox.pack(fill='both', expand=1)
 
             bw = self._borderframe.cget('borderwidth'),
             ht = self._borderframe.cget('highlightthickness'),
@@ -7157,7 +7503,7 @@ class ScrolledText(MegaWidget):
                     (), None,
                     Tkinter.Text, (interior,),
             )
-            self._textbox.grid(row = 4, column = 4, sticky = 'news')
+            self._textbox.grid(row=4, column=4, sticky='news')
 
             bw = self._textbox.cget('borderwidth'),
             ht = self._textbox.cget('highlightthickness'),
@@ -7169,10 +7515,10 @@ class ScrolledText(MegaWidget):
                     Tkinter.Text, (interior,),
                     height=1,
                     wrap='none',
-                    borderwidth = bw,
-                    highlightthickness = ht,
+                    borderwidth=bw,
+                    highlightthickness=ht,
             )
-            self._columnheader.grid(row = 2, column = 4, sticky = 'ew')
+            self._columnheader.grid(row=2, column=4, sticky='ew')
             self._columnheader.configure(
                     xscrollcommand = self._columnheaderscrolled)
 
@@ -7181,10 +7527,10 @@ class ScrolledText(MegaWidget):
                     (), 'Header',
                     Tkinter.Text, (interior,),
                     wrap='none',
-                    borderwidth = bw,
-                    highlightthickness = ht,
+                    borderwidth=bw,
+                    highlightthickness=ht,
             )
-            self._rowheader.grid(row = 4, column = 2, sticky = 'ns')
+            self._rowheader.grid(row=4, column=2, sticky='ns')
             self._rowheader.configure(
                     yscrollcommand = self._rowheaderscrolled)
 
@@ -7197,10 +7543,10 @@ class ScrolledText(MegaWidget):
                     borderwidth = bw,
                     highlightthickness = ht,
             )
-            self._rowcolumnheader.grid(row = 2, column = 2, sticky = 'nsew')
+            self._rowcolumnheader.grid(row=2, column=2, sticky='nsew')
 
-        interior.grid_rowconfigure(4, weight = 1, minsize = 0)
-        interior.grid_columnconfigure(4, weight = 1, minsize = 0)
+        interior.grid_rowconfigure(4,    weight=1, minsize=0)
+        interior.grid_columnconfigure(4, weight=1, minsize=0)
 
         # Create the horizontal scrollbar
         self._horizScrollbar = self.createcomponent('horizscrollbar',
@@ -7218,27 +7564,28 @@ class ScrolledText(MegaWidget):
                 command=self._textbox.yview
         )
 
-        self.createlabel(interior, childCols = 5, childRows = 5)
+        self.createlabel(interior, childCols=5, childRows=5)
 
         # Initialise instance variables.
-        self._horizScrollbarOn = 0
-        self._vertScrollbarOn = 0
-        self.scrollTimer = None
-        self._scrollRecurse = 0
+        self._horizScrollbarOn     = 0
+        self._vertScrollbarOn      = 0
+        self.scrollTimer           = None
+        self._scrollRecurse        = 0
         self._horizScrollbarNeeded = 0
-        self._vertScrollbarNeeded = 0
-        self._textWidth = None
+        self._vertScrollbarNeeded  = 0
+        self._textWidth            = None
 
         # These four variables avoid an infinite loop caused by the
         # row or column header's scrollcommand causing the main text
         # widget's scrollcommand to be called and vice versa.
-        self._textboxLastX = None
-        self._textboxLastY = None
+        self._textboxLastX      = None
+        self._textboxLastY      = None
         self._columnheaderLastX = None
-        self._rowheaderLastY = None
+        self._rowheaderLastY    = None
 
         # Check keywords and initialise options.
         self.initialiseoptions()
+
 
     def destroy(self):
         if self.scrollTimer is not None:
@@ -7247,7 +7594,6 @@ class ScrolledText(MegaWidget):
         MegaWidget.destroy(self)
 
     # ======================================================================
-
     # Public methods.
 
     def clear(self):
@@ -7273,6 +7619,7 @@ class ScrolledText(MegaWidget):
         if disabled:
             self._textbox.configure(state='disabled')
 
+
     # Override Tkinter.Text get method, so that if it is called with
     # no arguments, return all text (consistent with other widgets).
     def get(self, first=None, last=None):
@@ -7281,11 +7628,14 @@ class ScrolledText(MegaWidget):
         else:
             return self._textbox.get(first, last)
 
+
     def getvalue(self):
         return self.get()
 
+
     def setvalue(self, text):
         return self.settext(text)
+
 
     def appendtext(self, text):
         oldTop, oldBottom = self._textbox.yview()
@@ -7301,7 +7651,6 @@ class ScrolledText(MegaWidget):
             self._textbox.yview('moveto', 1.0)
 
     # ======================================================================
-
     # Configuration methods.
 
     def _hscrollMode(self):
@@ -7324,6 +7673,7 @@ class ScrolledText(MegaWidget):
 
         self._configureScrollCommands()
 
+
     def _vscrollMode(self):
         # The vertical scroll mode has been configured.
 
@@ -7345,7 +7695,6 @@ class ScrolledText(MegaWidget):
         self._configureScrollCommands()
 
     # ======================================================================
-
     # Private methods.
 
     def _configureScrollCommands(self):
@@ -7372,6 +7721,7 @@ class ScrolledText(MegaWidget):
                     yscrollcommand=self._scrollYNow
             )
 
+
     def _scrollXNow(self, first, last):
         self._horizScrollbar.set(first, last)
         self._horizScrollbarNeeded = ((first, last) != ('0', '1'))
@@ -7390,6 +7740,7 @@ class ScrolledText(MegaWidget):
                 self._columnheaderLastX = first
                 self._columnheader.xview('moveto', first)
 
+
     def _scrollYNow(self, first, last):
         if first == '0' and last == '0':
             return
@@ -7405,12 +7756,14 @@ class ScrolledText(MegaWidget):
                 self._rowheaderLastY = first
                 self._rowheader.yview('moveto', first)
 
+
     def _scrollBothLater(self, first, last):
         # Called by the text widget to set the horizontal or vertical
         # scrollbar when it has scrolled or changed size or contents.
 
         if self.scrollTimer is None:
             self.scrollTimer = self.after_idle(self._scrollBothNow)
+
 
     def _scrollBothNow(self):
         # This performs the function of _scrollXNow and _scrollYNow.
@@ -7497,15 +7850,18 @@ class ScrolledText(MegaWidget):
             if self._vertScrollbarNeeded != self._vertScrollbarOn:
                 self._toggleVertScrollbar()
 
+
     def _columnheaderscrolled(self, first, last):
         if self._textboxLastX != first:
             self._textboxLastX = first
             self._textbox.xview('moveto', first)
 
+
     def _rowheaderscrolled(self, first, last):
         if self._textboxLastY != first:
             self._textboxLastY = first
             self._textbox.yview('moveto', first)
+
 
     def _toggleHorizScrollbar(self):
 
@@ -7519,6 +7875,7 @@ class ScrolledText(MegaWidget):
             self._horizScrollbar.grid_forget()
             interior.grid_rowconfigure(5, minsize = 0)
 
+
     def _toggleVertScrollbar(self):
 
         self._vertScrollbarOn = not self._vertScrollbarOn
@@ -7531,10 +7888,13 @@ class ScrolledText(MegaWidget):
             self._vertScrollbar.grid_forget()
             interior.grid_columnconfigure(5, minsize = 0)
 
+
     # Need to explicitly forward this to override the stupid
     # (grid_)bbox method inherited from Tkinter.Frame.Grid.
     def bbox(self, index):
         return self._textbox.bbox(index)
+
+
 
 forwardmethods(ScrolledText, Tkinter.Text, '_textbox')
 
@@ -7544,11 +7904,13 @@ forwardmethods(ScrolledText, Tkinter.Text, '_textbox')
 
 _ORIGINAL = 0
 _MODIFIED = 1
-_DISPLAY = 2
+_DISPLAY  = 2
+
+
 
 class HistoryText(ScrolledText):
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
 
         # Define the megawidget options.
         optiondefs = (
@@ -7562,13 +7924,14 @@ class HistoryText(ScrolledText):
         ScrolledText.__init__(self, parent)
 
         # Initialise instance variables.
-        self._list = []
+        self._list      = []
         self._currIndex = 0
         self._pastIndex = None
         self._lastIndex = 0          # pointer to end of history list
 
         # Check keywords and initialise options.
         self.initialiseoptions()
+
 
     def addhistory(self):
         text = self.get()
@@ -7616,11 +7979,13 @@ class HistoryText(ScrolledText):
         self._lastIndex = self._lastIndex + 1
         self._currIndex = self._lastIndex
 
+
     def next(self):
         if self._currIndex == self._lastIndex and self._pastIndex is None:
             self.bell()
         else:
             self._modifyDisplay('next')
+
 
     def prev(self):
         self._pastIndex = None
@@ -7629,16 +7994,20 @@ class HistoryText(ScrolledText):
         else:
             self._modifyDisplay('prev')
 
+
     def undo(self):
         if len(self._list) != 0:
             self._modifyDisplay('undo')
+
 
     def redo(self):
         if len(self._list) != 0:
             self._modifyDisplay('redo')
 
+
     def gethistory(self):
         return self._list
+
 
     def _modifyDisplay(self, command):
         # Modify the display to show either the next or previous
@@ -7698,7 +8067,7 @@ class SelectionDialog(Dialog):
     # Dialog window displaying a list and requesting the user to
     # select one.
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
         # Define the megawidget options.
 
         optiondefs = (
@@ -7714,7 +8083,7 @@ class SelectionDialog(Dialog):
         interior = self.interior()
         aliases = (
             ('listbox', 'scrolledlist_listbox'),
-            ('label', 'scrolledlist_label'),
+            ('label',   'scrolledlist_label'),
         )
         self._list = self.createcomponent('scrolledlist',
                 aliases, None,
@@ -7732,15 +8101,19 @@ class SelectionDialog(Dialog):
         # Check keywords and initialise options.
         self.initialiseoptions()
 
+
     # Need to explicitly forward this to override the stupid
     # (grid_)size method inherited from Tkinter.Toplevel.Grid.
     def size(self):
         return self.component('listbox').size()
 
+
     # Need to explicitly forward this to override the stupid
     # (grid_)bbox method inherited from Tkinter.Toplevel.Grid.
     def bbox(self, index):
         return self.component('listbox').size(index)
+
+
 
 forwardmethods(SelectionDialog, ScrolledListBox, '_list')
 
@@ -7752,7 +8125,7 @@ forwardmethods(SelectionDialog, ScrolledListBox, '_list')
 
 class TextDialog(Dialog):
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
         # Define the megawidget options.
 
         optiondefs = (
@@ -7779,10 +8152,13 @@ class TextDialog(Dialog):
         # Check keywords and initialise options.
         self.initialiseoptions()
 
+
     # Need to explicitly forward this to override the stupid
     # (grid_)bbox method inherited from Tkinter.Toplevel.Grid.
     def bbox(self, index):
         return self._text.bbox(index)
+
+
 
 forwardmethods(TextDialog, ScrolledText, '_text')
 
@@ -7798,6 +8174,7 @@ except ImportError:
     import Tkinter
 
 
+
 class TimeCounter(MegaWidget):
     """Up-down counter
 
@@ -7805,7 +8182,7 @@ class TimeCounter(MegaWidget):
     which increment and decrement the Time value in the entry.
     """
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
 
         # Define the megawidget options.
 
@@ -7829,19 +8206,20 @@ class TimeCounter(MegaWidget):
         MegaWidget.__init__(self, parent)
 
         self.arrowDirection = {}
-        self._flag = 'stopped'
-        self._timerId = None
+        self._flag          = 'stopped'
+        self._timerId       = None
 
         self._createComponents(kw)
 
         value = self['value']
         if value is None:
-            now = time.time()
+            now   = time.time()
             value = time.strftime('%H:%M:%S', time.localtime(now))
         self.setvalue(value)
 
         # Check keywords and initialise options.
         self.initialiseoptions()
+
 
     def _createComponents(self, kw):
 
@@ -7942,12 +8320,14 @@ class TimeCounter(MegaWidget):
         # Make it resize nicely.
         padx = self['padx']
         pady = self['pady']
-        for col in range(3):
-            frame.grid_columnconfigure(col, weight = 1, pad = padx)
-        frame.grid_rowconfigure(0, pad = pady)
-        frame.grid_rowconfigure(2, pad = pady)
 
-        frame.grid_rowconfigure(1, weight = 1)
+        for col in range(3):
+            frame.grid_columnconfigure(col, weight=1, pad=padx)
+
+        frame.grid_rowconfigure(0, pad=pady)
+        frame.grid_rowconfigure(2, pad=pady)
+
+        frame.grid_rowconfigure(1, weight=1)
 
         # Create the label.
         self.createlabel(interior)
@@ -8039,14 +8419,16 @@ class TimeCounter(MegaWidget):
         self._secondCounterEntry.component('entry').bind(
                 '<Return>', self._invoke)
 
-        self._hourCounterEntry.bind('<Configure>', self._resizeArrow)
+        self._hourCounterEntry.bind('<Configure>',   self._resizeArrow)
         self._minuteCounterEntry.bind('<Configure>', self._resizeArrow)
         self._secondCounterEntry.bind('<Configure>', self._resizeArrow)
+
 
     def _drawArrow(self, arrow, direction):
         drawarrow(arrow, self['hourentry_foreground'], direction, 'arrow')
 
-    def _resizeArrow(self, event = None):
+
+    def _resizeArrow(self, event=None):
         for btn in (self._upHourArrowBtn, self._upMinuteArrowBtn,
                 self._upSecondArrowBtn,
                 self._downHourArrowBtn,
@@ -8058,12 +8440,14 @@ class TimeCounter(MegaWidget):
             btn.configure(width=newWidth, height=newHeight)
             self._drawArrow(btn, self.arrowDirection[btn])
 
+
     def _min(self):
         minV = self['min']
         if minV is None:
             self._minVal = 0
         else:
             self._minVal = timestringtoseconds(minV)
+
 
     def _max(self):
         maxV = self['max']
@@ -8072,8 +8456,10 @@ class TimeCounter(MegaWidget):
         else:
             self._maxVal = timestringtoseconds(maxV)
 
+
     def getvalue(self):
         return self.getstring()
+
 
     def setvalue(self, text):
         l = text.split(':')
@@ -8086,16 +8472,20 @@ class TimeCounter(MegaWidget):
 
         self._setHMS()
 
+
     def getstring(self):
         return '%02d:%02d:%02d' % (self._hour, self._minute, self._second)
 
+
     def getint(self):
         return self._hour * 3600 + self._minute * 60 + self._second
+
 
     def _countUp(self, button, increment):
         self._relief = self._upHourArrowBtn.cget('relief')
         button.configure(relief='sunken')
         self._count(1, 'start', increment)
+
 
     def _countDown(self, button, increment):
 
@@ -8103,13 +8493,16 @@ class TimeCounter(MegaWidget):
         button.configure(relief='sunken')
         self._count(-1, 'start', increment)
 
-    def increment(self, seconds = 1):
+
+    def increment(self, seconds=1):
         self._count(1, 'force', seconds)
 
-    def decrement(self, seconds = 1):
+
+    def decrement(self, seconds=1):
         self._count(-1, 'force', seconds)
 
-    def _count(self, factor, newFlag = None, increment = 1):
+
+    def _count(self, factor, newFlag=None, increment=1):
         if newFlag != 'force':
           if newFlag is not None:
             self._flag = newFlag
@@ -8128,7 +8521,7 @@ class TimeCounter(MegaWidget):
         if maxV is not None and value > maxV:
           value = maxV
 
-        self._hour = value /3600
+        self._hour   = value /3600
         self._minute = (value - (self._hour*3600)) / 60
         self._second = value - (self._hour*3600) - (self._minute*60)
         self._setHMS()
@@ -8144,10 +8537,12 @@ class TimeCounter(MegaWidget):
                 delay, lambda self=self, factor=factor,increment=increment:
                   self._count(factor,'running', increment))
 
+
     def _setHMS(self):
-        self._hourCounterEntry.setentry('%02d' % self._hour)
+        self._hourCounterEntry.setentry('%02d'   % self._hour)
         self._minuteCounterEntry.setentry('%02d' % self._minute)
         self._secondCounterEntry.setentry('%02d' % self._second)
+
 
     def _stopUpDown(self, button):
         if self._timerId is not None:
@@ -8156,15 +8551,18 @@ class TimeCounter(MegaWidget):
         button.configure(relief=self._relief)
         self._flag = 'stopped'
 
+
     def _invoke(self, event):
         cmd = self['command']
         if isinstance(cmd, collections.Callable):
             cmd()
 
+
     def invoke(self):
         cmd = self['command']
         if isinstance(cmd, collections.Callable):
             return cmd()
+
 
     def destroy(self):
         if self._timerId is not None:
@@ -8180,11 +8578,11 @@ class AboutDialog(MessageDialog):
     # Window to display version and contact information.
 
     # Class members containing resettable 'default' values:
-    _version = ''
+    _version   = ''
     _copyright = ''
-    _contact = ''
+    _contact   = ''
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
 
         # Define the megawidget options.
 
@@ -8218,14 +8616,19 @@ class AboutDialog(MessageDialog):
         # Check keywords and initialise options.
         self.initialiseoptions()
 
+
+
 def aboutversion(value):
     AboutDialog._version = value
+
 
 def aboutcopyright(value):
     AboutDialog._copyright = value
 
+
 def aboutcontact(value):
     AboutDialog._contact = value
+
 
 ######################################################################
 ### File: PmwComboBox.py
@@ -8238,9 +8641,10 @@ except ImportError:
     import Tkinter
 
 
+
 class ComboBox(MegaWidget):
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
 
         # Define the megawidget options.
 
@@ -8305,45 +8709,45 @@ class ComboBox(MegaWidget):
             self._list = self.createcomponent('scrolledlist',
                     (('listbox', 'scrolledlist_listbox'),), None,
                     ScrolledListBox, (self._popup,),
-                    hull_borderwidth = 2,
-                    hull_relief = 'raised',
-                    hull_height = self['listheight'],
-                    usehullsize = 1,
-                    listbox_exportselection = 0)
+                    hull_borderwidth=2,
+                    hull_relief='raised',
+                    hull_height=self['listheight'],
+                    usehullsize=1,
+                    listbox_exportselection=0)
             self._list.pack(expand=1, fill='both')
             self.__listbox = self._list.component('listbox')
 
             # Bind events to the arrow button.
-            self._arrowBtn.bind('<1>', self._postList)
-            self._arrowBtn.bind('<Configure>', self._drawArrow)
-            self._arrowBtn.bind('<3>', self._next)
-            self._arrowBtn.bind('<Shift-3>', self._previous)
-            self._arrowBtn.bind('<Down>', self._next)
-            self._arrowBtn.bind('<Up>', self._previous)
-            self._arrowBtn.bind('<Control-n>', self._next)
-            self._arrowBtn.bind('<Control-p>', self._previous)
+            self._arrowBtn.bind('<1>',          self._postList)
+            self._arrowBtn.bind('<Configure>',  self._drawArrow)
+            self._arrowBtn.bind('<3>',          self._next)
+            self._arrowBtn.bind('<Shift-3>',    self._previous)
+            self._arrowBtn.bind('<Down>',       self._next)
+            self._arrowBtn.bind('<Up>',         self._previous)
+            self._arrowBtn.bind('<Control-n>',  self._next)
+            self._arrowBtn.bind('<Control-p>',  self._previous)
             self._arrowBtn.bind('<Shift-Down>', self._postList)
-            self._arrowBtn.bind('<Shift-Up>', self._postList)
-            self._arrowBtn.bind('<F34>', self._postList)
-            self._arrowBtn.bind('<F28>', self._postList)
-            self._arrowBtn.bind('<space>', self._postList)
+            self._arrowBtn.bind('<Shift-Up>',   self._postList)
+            self._arrowBtn.bind('<F34>',        self._postList)
+            self._arrowBtn.bind('<F28>',        self._postList)
+            self._arrowBtn.bind('<space>',      self._postList)
 
             # Bind events to the dropdown window.
-            self._popup.bind('<Escape>', self._unpostList)
-            self._popup.bind('<space>', self._selectUnpost)
-            self._popup.bind('<Return>', self._selectUnpost)
+            self._popup.bind('<Escape>',          self._unpostList)
+            self._popup.bind('<space>',           self._selectUnpost)
+            self._popup.bind('<Return>',          self._selectUnpost)
             self._popup.bind('<ButtonRelease-1>', self._dropdownBtnRelease)
-            self._popup.bind('<ButtonPress-1>', self._unpostOnNextRelease)
+            self._popup.bind('<ButtonPress-1>',   self._unpostOnNextRelease)
 
             # Bind events to the Tk listbox.
             self.__listbox.bind('<Enter>', self._unpostOnNextRelease)
 
             # Bind events to the Tk entry widget.
-            self._entryWidget.bind('<Configure>', self._resizeArrow)
+            self._entryWidget.bind('<Configure>',  self._resizeArrow)
             self._entryWidget.bind('<Shift-Down>', self._postList)
-            self._entryWidget.bind('<Shift-Up>', self._postList)
-            self._entryWidget.bind('<F34>', self._postList)
-            self._entryWidget.bind('<F28>', self._postList)
+            self._entryWidget.bind('<Shift-Up>',   self._postList)
+            self._entryWidget.bind('<F34>',        self._postList)
+            self._entryWidget.bind('<F28>',        self._postList)
 
             # Need to unpost the popup if the entryfield is unmapped (eg:
             # its toplevel window is withdrawn) while the popup list is
@@ -8365,12 +8769,12 @@ class ComboBox(MegaWidget):
             # Create the label.
             self.createlabel(interior, childRows=2)
 
-        self._entryWidget.bind('<Down>', self._next)
-        self._entryWidget.bind('<Up>', self._previous)
+        self._entryWidget.bind('<Down>',      self._next)
+        self._entryWidget.bind('<Up>',        self._previous)
         self._entryWidget.bind('<Control-n>', self._next)
         self._entryWidget.bind('<Control-p>', self._previous)
-        self.__listbox.bind('<Control-n>', self._next)
-        self.__listbox.bind('<Control-p>', self._previous)
+        self.__listbox.bind('<Control-n>',    self._next)
+        self.__listbox.bind('<Control-p>',    self._previous)
 
         if self['history']:
             self._entryfield.configure(command=self._addHistory)
@@ -8378,26 +8782,28 @@ class ComboBox(MegaWidget):
         # Check keywords and initialise options.
         self.initialiseoptions()
 
+
     def destroy(self):
         if self['dropdown'] and self._isPosted:
             popgrab(self._popup)
         MegaWidget.destroy(self)
 
     #======================================================================
-
     # Public methods
 
-    def get(self, first = None, last=None):
+    def get(self, first=None, last=None):
         if first is None:
             return self._entryWidget.get()
         else:
             return self._list.get(first, last)
+
 
     def invoke(self):
         if self['dropdown']:
             self._postList()
         else:
             return self._selectCmd()
+
 
     def selectitem(self, index, setentry=1):
         if _myisstr(index):
@@ -8417,22 +8823,24 @@ class ComboBox(MegaWidget):
         if setentry:
             self._entryfield.setentry(text)
 
+
     # Need to explicitly forward this to override the stupid
     # (grid_)size method inherited from Tkinter.Frame.Grid.
     def size(self):
         return self._list.size()
+
 
     # Need to explicitly forward this to override the stupid
     # (grid_)bbox method inherited from Tkinter.Frame.Grid.
     def bbox(self, index):
         return self._list.bbox(index)
 
+
     def clear(self):
         self._entryfield.clear()
         self._list.clear()
 
     #======================================================================
-
     # Private methods for both dropdown and simple comboboxes.
 
     def _addHistory(self):
@@ -8457,6 +8865,7 @@ class ComboBox(MegaWidget):
             # Execute the selectioncommand on the new entry.
             self._selectCmd()
 
+
     def _next(self, event):
         size = self.size()
         if size <= 1:
@@ -8474,6 +8883,7 @@ class ComboBox(MegaWidget):
                 index = index + 1
 
         self.selectitem(index)
+
 
     def _previous(self, event):
         size = self.size()
@@ -8493,6 +8903,7 @@ class ComboBox(MegaWidget):
 
         self.selectitem(index)
 
+
     def _selectCmd(self, event=None):
 
         sels = self.getcurselection()
@@ -8511,7 +8922,6 @@ class ComboBox(MegaWidget):
                 cmd(item)
 
     #======================================================================
-
     # Private methods for dropdown combobox.
 
     def _drawArrow(self, event=None, sunken=0):
@@ -8528,7 +8938,8 @@ class ComboBox(MegaWidget):
             direction = 'down'
         drawarrow(arrow, self['entry_foreground'], direction, 'arrow')
 
-    def _postList(self, event = None):
+
+    def _postList(self, event=None):
         self._isPosted = 1
         self._drawArrow(sunken=1)
 
@@ -8561,6 +8972,7 @@ class ComboBox(MegaWidget):
         # dropdown list, unless the mouse enters the dropdown list.
         self._ignoreRelease = 1
 
+
     def _dropdownBtnRelease(self, event):
         if (event.widget == self._list.component('vertscrollbar') or
                 event.widget == self._list.component('horizscrollbar')):
@@ -8576,8 +8988,10 @@ class ComboBox(MegaWidget):
                 event.y >= 0 and event.y < self.__listbox.winfo_height()):
             self._selectCmd()
 
-    def _unpostOnNextRelease(self, event = None):
+
+    def _unpostOnNextRelease(self, event=None):
         self._ignoreRelease = 0
+
 
     def _resizeArrow(self, event):
         bw = (int(self._arrowBtn['borderwidth']) +
@@ -8586,6 +9000,7 @@ class ComboBox(MegaWidget):
         newWidth = int(newHeight * self['buttonaspect'])
         self._arrowBtn.configure(width=newWidth, height=newHeight)
         self._drawArrow()
+
 
     def _unpostList(self, event=None):
         if not self._isPosted:
@@ -8607,12 +9022,15 @@ class ComboBox(MegaWidget):
         self._isPosted = 0
         self._drawArrow()
 
+
     def _selectUnpost(self, event):
         self._unpostList()
         self._selectCmd()
 
+
+
 forwardmethods(ComboBox, ScrolledListBox, '_list')
-forwardmethods(ComboBox, EntryField, '_entryfield')
+forwardmethods(ComboBox, EntryField,      '_entryfield')
 
 ######################################################################
 ### File: PmwComboBoxDialog.py
@@ -8626,7 +9044,7 @@ class ComboBoxDialog(Dialog):
     # Dialog window displaying a list and entry field and requesting
     # the user to make a selection or enter a value
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
         # Define the megawidget options.
 
         optiondefs = (
@@ -8665,15 +9083,19 @@ class ComboBoxDialog(Dialog):
         # Check keywords and initialise options.
         self.initialiseoptions()
 
+
     # Need to explicitly forward this to override the stupid
     # (grid_)size method inherited from Tkinter.Toplevel.Grid.
     def size(self):
         return self._combobox.size()
 
+
     # Need to explicitly forward this to override the stupid
     # (grid_)bbox method inherited from Tkinter.Toplevel.Grid.
     def bbox(self, index):
         return self._combobox.bbox(index)
+
+
 
 forwardmethods(ComboBoxDialog, ComboBox, '_combobox')
 
@@ -8686,12 +9108,12 @@ except ImportError:
     import Tkinter
 
 
+
 class Counter(MegaWidget):
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
 
         # Define the megawidget options.
-
         optiondefs = (
             ('autorepeat',     1,             None),
             ('buttonaspect',   1.0,           INITOPT),
@@ -8712,7 +9134,7 @@ class Counter(MegaWidget):
         MegaWidget.__init__(self, parent)
 
         # Initialise instance variables.
-        self._timerId = None
+        self._timerId      = None
         self._normalRelief = None
 
         # Create the components.
@@ -8754,9 +9176,10 @@ class Counter(MegaWidget):
                 Tkinter.Canvas, (frame,),
                 width = 16, height = 16, relief = 'raised', borderwidth = 2)
 
-        padx = self['padx']
-        pady = self['pady']
+        padx   = self['padx']
+        pady   = self['pady']
         orient = self['orient']
+
         if orient == 'horizontal':
             self._downArrowBtn.grid(column = 0, row = 0)
             self._counterEntry.grid(column = 1, row = 0,
@@ -8786,26 +9209,28 @@ class Counter(MegaWidget):
 
         self.createlabel(interior)
 
-        self._upArrowBtn.bind('<Configure>', self._drawUpArrow)
-        self._upArrowBtn.bind('<1>', self._countUp)
-        self._upArrowBtn.bind('<Any-ButtonRelease-1>', self._stopCounting)
-        self._downArrowBtn.bind('<Configure>', self._drawDownArrow)
-        self._downArrowBtn.bind('<1>', self._countDown)
+        self._upArrowBtn.bind('<Configure>',             self._drawUpArrow)
+        self._upArrowBtn.bind('<1>',                     self._countUp)
+        self._upArrowBtn.bind('<Any-ButtonRelease-1>',   self._stopCounting)
+        self._downArrowBtn.bind('<Configure>',           self._drawDownArrow)
+        self._downArrowBtn.bind('<1>',                   self._countDown)
         self._downArrowBtn.bind('<Any-ButtonRelease-1>', self._stopCounting)
-        self._counterEntry.bind('<Configure>', self._resizeArrow)
+        self._counterEntry.bind('<Configure>',           self._resizeArrow)
+
         entry = self._counterEntry.component('entry')
-        entry.bind('<Down>', lambda event, s = self: s._key_decrement(event))
-        entry.bind('<Up>', lambda event, s = self: s._key_increment(event))
+        entry.bind('<Down>', lambda event, s=self: s._key_decrement(event))
+        entry.bind('<Up>',   lambda event, s=self: s._key_increment(event))
 
         # Need to cancel the timer if an arrow button is unmapped (eg:
         # its toplevel window is withdrawn) while the mouse button is
         # held down.  The canvas will not get the ButtonRelease event
         # if it is not mapped, since the implicit grab is cancelled.
-        self._upArrowBtn.bind('<Unmap>', self._stopCounting)
+        self._upArrowBtn.bind('<Unmap>',   self._stopCounting)
         self._downArrowBtn.bind('<Unmap>', self._stopCounting)
 
         # Check keywords and initialise options.
         self.initialiseoptions()
+
 
     def _resizeArrow(self, event):
         for btn in (self._upArrowBtn, self._downArrowBtn):
@@ -8816,11 +9241,14 @@ class Counter(MegaWidget):
             btn.configure(width=newWidth, height=newHeight)
             self._drawArrow(btn)
 
+
     def _drawUpArrow(self, event):
         self._drawArrow(self._upArrowBtn)
 
+
     def _drawDownArrow(self, event):
         self._drawArrow(self._downArrowBtn)
+
 
     def _drawArrow(self, arrow):
         if self['orient'] == 'vertical':
@@ -8835,7 +9263,8 @@ class Counter(MegaWidget):
                 direction = 'left'
         drawarrow(arrow, self['entry_foreground'], direction, 'arrow')
 
-    def _stopCounting(self, event = None):
+
+    def _stopCounting(self, event=None):
         if self._timerId is not None:
             self.after_cancel(self._timerId)
             self._timerId = None
@@ -8844,12 +9273,14 @@ class Counter(MegaWidget):
             button.configure(relief=relief)
             self._normalRelief = None
 
+
     def _countUp(self, event):
         self._normalRelief = (self._upArrowBtn, self._upArrowBtn.cget('relief'))
         self._upArrowBtn.configure(relief='sunken')
         # Force arrow down (it may come up immediately, if increment fails).
         self._upArrowBtn.update_idletasks()
         self._count(1, 1)
+
 
     def _countDown(self, event):
         self._normalRelief = (self._downArrowBtn, self._downArrowBtn.cget('relief'))
@@ -8858,19 +9289,24 @@ class Counter(MegaWidget):
         self._downArrowBtn.update_idletasks()
         self._count(-1, 1)
 
+
     def increment(self):
         self._forceCount(1)
 
+
     def decrement(self):
         self._forceCount(-1)
+
 
     def _key_increment(self, event):
         self._forceCount(1)
         self.update_idletasks()
 
+
     def _key_decrement(self, event):
         self._forceCount(-1)
         self.update_idletasks()
+
 
     def _datatype(self):
         datatype = self['datatype']
@@ -8894,6 +9330,7 @@ class Counter(MegaWidget):
             raise ValueError(('bad datatype value "%s":  must be a' +
                 ' function or one of %s') % (datatype, validValues))
 
+
     def _forceCount(self, factor):
         if not self.valid():
             self.bell()
@@ -8911,6 +9348,7 @@ class Counter(MegaWidget):
         if self._counterEntry.setentry(value) == OK:
             self._counterEntry.xview('end')
             self._counterEntry.icursor(previousICursor)
+
 
     def _count(self, factor, first):
         if not self.valid():
@@ -8949,11 +9387,15 @@ class Counter(MegaWidget):
             self._timerId = self.after(delay,
                     lambda self=self, factor=factor: self._count(factor, 0))
 
+
     def destroy(self):
         self._stopCounting()
         MegaWidget.destroy(self)
 
+
+
 forwardmethods(Counter, EntryField, '_counterEntry')
+
 
 def _changeNumber(text, factor, increment):
   value = long(text)
@@ -8969,9 +9411,10 @@ def _changeNumber(text, factor, increment):
   else:
       return rtn
 
-def _changeReal(text, factor, increment, separator = '.'):
+
+def _changeReal(text, factor, increment, separator='.'):
   value = stringtoreal(text, separator)
-  div = value / increment
+  div   = value / increment
 
   # Compare reals using str() to avoid problems caused by binary
   # numbers being only approximations to decimal numbers.
@@ -8997,8 +9440,9 @@ def _changeReal(text, factor, increment, separator = '.'):
         text = text[:index] + separator + text[index + 1:]
   return text
 
-def _changeDate(value, factor, increment, format = 'ymd',
-        separator = '/', yyyy = 0):
+
+def _changeDate(value, factor, increment, format='ymd',
+                separator='/', yyyy=0):
 
   jdn = datestringtojdn(value, format, separator) + factor * increment
 
@@ -9020,37 +9464,47 @@ def _changeDate(value, factor, increment, format = 'ymd',
 
   return result
 
+
 _SECSPERDAY = 24 * 60 * 60
-def _changeTime(value, factor, increment, separator = ':', time24 = 0):
+
+
+def _changeTime(value, factor, increment, separator=':', time24=0):
   unixTime = timestringtoseconds(value, separator)
+
   if factor > 0:
     chunks = unixTime / increment + 1
   else:
     chunks = (unixTime - 1) / increment
+
   unixTime = chunks * increment
+
   if time24:
       while unixTime < 0:
           unixTime = unixTime + _SECSPERDAY
       while unixTime >= _SECSPERDAY:
           unixTime = unixTime - _SECSPERDAY
+
   if unixTime < 0:
     unixTime = -unixTime
     sign = '-'
   else:
     sign = ''
-  secs = unixTime % 60
+
+  secs     = unixTime % 60
   unixTime = unixTime / 60
-  mins = unixTime % 60
-  hours = unixTime / 60
+  mins     = unixTime % 60
+  hours    = unixTime / 60
+
   return '%s%02d%s%02d%s%02d' % (sign, hours, separator, mins, separator, secs)
+
 
 # hexadecimal, alphabetic, alphanumeric not implemented
 _counterCommands = {
-    'numeric'   : _changeNumber,      # } integer
-    'integer'   : _changeNumber,      # } these two use the same function
-    'real'      : _changeReal,        # real number
-    'time'      : _changeTime,
-    'date'      : _changeDate,
+    'numeric': _changeNumber,      # } integer
+    'integer': _changeNumber,      # } these two use the same function
+    'real':    _changeReal,        # real number
+    'time':    _changeTime,
+    'date':    _changeDate,
 }
 
 ######################################################################
@@ -9061,7 +9515,7 @@ _counterCommands = {
 
 class CounterDialog(Dialog):
 
-    def __init__(self, parent = None, **kw):
+    def __init__(self, parent=None, **kw):
 
         # Define the megawidget options.
 
@@ -9080,8 +9534,8 @@ class CounterDialog(Dialog):
         # Create the counter.
         aliases = (
             ('entryfield', 'counter_entryfield'),
-            ('entry', 'counter_entryfield_entry'),
-            ('label', 'counter_label')
+            ('entry',      'counter_entryfield_entry'),
+            ('label',      'counter_label')
         )
         self._cdCounter = self.createcomponent('counter',
                 aliases, None,
@@ -9108,11 +9562,14 @@ class CounterDialog(Dialog):
     def indexentry(self, index):
         return self._cdCounter.index(index)
 
+
+
 forwardmethods(CounterDialog, Counter, '_cdCounter')
 
 ######################################################################
 ### File: PmwLogicalFont.py
 import os
+
 
 def _font_initialise(root, size=None, fontScheme = None):
     global _fontSize
@@ -9122,8 +9579,9 @@ def _font_initialise(root, size=None, fontScheme = None):
     if fontScheme in ('pmw1', 'pmw2'):
         if os.name == 'posix':
             defaultFont = logicalfont('Helvetica')
-            menuFont = logicalfont('Helvetica', weight='bold', slant='italic')
-            scaleFont = logicalfont('Helvetica', slant='italic')
+            menuFont    = logicalfont('Helvetica', weight='bold', slant='italic')
+            scaleFont   = logicalfont('Helvetica', slant='italic')
+
             root.option_add('*Font',            defaultFont,  'userDefault')
             root.option_add('*Menu*Font',       menuFont,     'userDefault')
             root.option_add('*Menubutton*Font', menuFont,     'userDefault')
@@ -9139,13 +9597,15 @@ def _font_initialise(root, size=None, fontScheme = None):
             root.option_add('*Font', defaultFont,  'userDefault')
     elif fontScheme == 'default':
         defaultFont = ('Helvetica', '-%d' % (_fontSize,), 'bold')
-        entryFont = ('Helvetica', '-%d' % (_fontSize,))
-        textFont = ('Courier', '-%d' % (_fontSize,))
-        root.option_add('*Font',            defaultFont,  'userDefault')
-        root.option_add('*Entry*Font',      entryFont,    'userDefault')
-        root.option_add('*Text*Font',       textFont,     'userDefault')
+        entryFont   = ('Helvetica', '-%d' % (_fontSize,))
+        textFont    = ('Courier',   '-%d' % (_fontSize,))
 
-def logicalfont(name='Helvetica', sizeIncr = 0, **kw):
+        root.option_add('*Font',       defaultFont, 'userDefault')
+        root.option_add('*Entry*Font', entryFont,   'userDefault')
+        root.option_add('*Text*Font',  textFont,    'userDefault')
+
+
+def logicalfont(name='Helvetica', sizeIncr=0, **kw):
   if name not in _fontInfo:
     raise ValueError('font %s does not exist' % name)
 
@@ -9178,17 +9638,31 @@ def logicalfont(name='Helvetica', sizeIncr = 0, **kw):
 
   return '-'.join(rtn)
 
+
 def logicalfontnames():
   return _fontInfo.keys()
+
 
 if os.name == 'nt':
     _fontSize = 16
 else:
     _fontSize = 14
 
-_fontFields = (
-  'registry', 'foundry', 'family', 'weight', 'slant', 'width', 'style',
-  'pixel', 'size', 'xres', 'yres', 'spacing', 'avgwidth', 'charset', 'encoding')
+_fontFields = ('registry',
+               'foundry',
+               'family',
+               'weight',
+               'slant',
+               'width',
+               'style',
+               'pixel',
+               'size',
+               'xres',
+               'yres',
+               'spacing',
+               'avgwidth',
+               'charset',
+               'encoding')
 
 # <_propertyAliases> defines other names for which property values may
 # be known by.  This is required because italics in adobe-helvetica
@@ -9197,11 +9671,11 @@ _fontFields = (
 _propertyAliases = {}
 
 _propertyAliases[None] = {
-  ('slant', 'italic') : 'i',
-  ('slant', 'normal') : 'r',
-  ('weight', 'light') : 'normal',
-  ('width', 'wide') : 'normal',
-  ('width', 'condensed') : 'normal',
+  ('slant',  'italic'):    'i',
+  ('slant',  'normal'):    'r',
+  ('weight', 'light'):     'normal',
+  ('width',  'wide'):      'normal',
+  ('width',  'condensed'): 'normal',
 }
 
 # <_fontInfo> describes a 'logical' font, giving the default values of
@@ -9210,95 +9684,95 @@ _propertyAliases[None] = {
 _fontInfo = {}
 
 _fontInfo['Helvetica'] = {
-  'foundry' : 'adobe',
-  'family' : 'helvetica',
-  'registry' : '',
-  'charset' : 'iso8859',
-  'encoding' : '1',
-  'spacing' : 'p',
-  'slant' : 'normal',
-  'width' : 'normal',
-  'weight' : 'normal',
+  'foundry':  'adobe',
+  'family':   'helvetica',
+  'registry': '',
+  'charset':  'iso8859',
+  'encoding': '1',
+  'spacing':  'p',
+  'slant':    'normal',
+  'width':    'normal',
+  'weight':   'normal',
 }
 
 _propertyAliases['Helvetica'] = {
-  ('slant', 'italic') : 'o',
-  ('weight', 'normal') : 'medium',
-  ('weight', 'light') : 'medium',
+  ('slant',  'italic'): 'o',
+  ('weight', 'normal'): 'medium',
+  ('weight', 'light'):  'medium',
 }
 
 _fontInfo['Times'] = {
-  'foundry' : 'adobe',
-  'family' : 'times',
-  'registry' : '',
-  'charset' : 'iso8859',
-  'encoding' : '1',
-  'spacing' : 'p',
-  'slant' : 'normal',
-  'width' : 'normal',
-  'weight' : 'normal',
+  'foundry':  'adobe',
+  'family':   'times',
+  'registry': '',
+  'charset':  'iso8859',
+  'encoding': '1',
+  'spacing':  'p',
+  'slant':    'normal',
+  'width':    'normal',
+  'weight':   'normal',
 }
 
 _propertyAliases['Times'] = {
-  ('weight', 'normal') : 'medium',
-  ('weight', 'light') : 'medium',
+  ('weight', 'normal'): 'medium',
+  ('weight', 'light'):  'medium',
 }
 
 _fontInfo['Fixed'] = {
-  'foundry' : 'misc',
-  'family' : 'fixed',
-  'registry' : '',
-  'charset' : 'iso8859',
-  'encoding' : '1',
-  'spacing' : 'c',
-  'slant' : 'normal',
-  'width' : 'normal',
-  'weight' : 'normal',
+  'foundry':  'misc',
+  'family':   'fixed',
+  'registry': '',
+  'charset':  'iso8859',
+  'encoding': '1',
+  'spacing':  'c',
+  'slant':    'normal',
+  'width':    'normal',
+  'weight':   'normal',
 }
 
 _propertyAliases['Fixed'] = {
-  ('weight', 'normal') : 'medium',
-  ('weight', 'light') : 'medium',
-  ('style', None) : '',
-  ('width', 'condensed') : 'semicondensed',
+  ('weight', 'normal'):    'medium',
+  ('weight', 'light'):     'medium',
+  ('style',  None):        '',
+  ('width',  'condensed'): 'semicondensed',
 }
 
 _fontInfo['Courier'] = {
-  'foundry' : 'adobe',
-  'family' : 'courier',
-  'registry' : '',
-  'charset' : 'iso8859',
-  'encoding' : '1',
-  'spacing' : 'm',
-  'slant' : 'normal',
-  'width' : 'normal',
-  'weight' : 'normal',
+  'foundry':  'adobe',
+  'family':   'courier',
+  'registry': '',
+  'charset':  'iso8859',
+  'encoding': '1',
+  'spacing':  'm',
+  'slant':    'normal',
+  'width':    'normal',
+  'weight':   'normal',
 }
 
 _propertyAliases['Courier'] = {
-  ('weight', 'normal') : 'medium',
-  ('weight', 'light') : 'medium',
-  ('style', None) : '',
+  ('weight', 'normal'): 'medium',
+  ('weight', 'light'):  'medium',
+  ('style',  None):     '',
 }
 
 _fontInfo['Typewriter'] = {
-  'foundry' : 'b&h',
-  'family' : 'lucidatypewriter',
-  'registry' : '',
-  'charset' : 'iso8859',
-  'encoding' : '1',
-  'spacing' : 'm',
-  'slant' : 'normal',
-  'width' : 'normal',
-  'weight' : 'normal',
+  'foundry':  'b&h',
+  'family':   'lucidatypewriter',
+  'registry': '',
+  'charset':  'iso8859',
+  'encoding': '1',
+  'spacing':  'm',
+  'slant':    'normal',
+  'width':    'normal',
+  'weight':   'normal',
 }
 
 _propertyAliases['Typewriter'] = {
-  ('weight', 'normal') : 'medium',
-  ('weight', 'light') : 'medium',
+  ('weight', 'normal'): 'medium',
+  ('weight', 'light'):  'medium',
 }
 
 if os.name == 'nt':
     # For some reason 'fixed' fonts on NT aren't.
-    _fontInfo['Fixed'] = _fontInfo['Courier']
+    _fontInfo['Fixed']        = _fontInfo['Courier']
     _propertyAliases['Fixed'] = _propertyAliases['Courier']
