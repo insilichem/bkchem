@@ -68,9 +68,12 @@ class validator(object):
       self.report.zero_order_bonds.append( b)
 
 
-  def validate_molecule( self, mol):
-    map( self.validate_atom, mol.atoms)
-    map( self.validate_bond, mol.bonds)
+  def validate_molecule(self, mol):
+    for a in mol.atoms:
+      self.validate_atom(a)
+    for b in mol.bonds:
+      self.validate_bond(b)
+
 
   def validate_list( self, objs):
     [self.validate_object( o) for o in objs]
