@@ -542,10 +542,12 @@ class edit_mode(basic_mode):
       dx = 0
     else:
       dx = event.x-self._startx
+
     if self._shift: # shift to move only in x
       dy = 0
     else:
       dy = event.y-self._starty
+
     if not self._dragging:
       # drag threshhold
       self._move_sofar += math.sqrt( dx**2 + dy**2)
@@ -558,6 +560,7 @@ class edit_mode(basic_mode):
             self._moving_selected_arrow = self.focused
             Store.app.paper.unselect( self.focused.points)
             break
+
       if self.focused and self.focused.object_type == 'selection_rect':
         # resizing of vector graphics
         self._dragging = 4
@@ -588,6 +591,7 @@ class edit_mode(basic_mode):
       else:
         ### don't do anything
         self._dragging = 10  # just a placeholder to know that click should not be called
+
     if self._dragging == 1:
       [o.move( dx, dy) for o in Store.app.paper.selected]
       if self._moving_selected_arrow:
