@@ -212,7 +212,7 @@ class config_dialog(object):
         pos = ['center-first', 'center-last'].index( poss[0])
       else:
         pos = 2 # means the centering should be preserved as is
-      if pos == None:
+      if pos is None:
         self.atom_pos = None
       else:
         self.atom_pos = Pmw.OptionMenu( self.atom_page,
