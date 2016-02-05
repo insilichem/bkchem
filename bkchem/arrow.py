@@ -133,10 +133,11 @@ class arrow( meta_enabled, drawable, with_line, line_colored, container, interac
       self.items = getattr(self,'_draw_'+self.type)()
       [self.paper.register_id( i, self) for i in self.items]
 
-  def redraw( self):
+  def redraw(self):
     if self.items:
-      map( self.paper.unregister_id, self.items)
-      map( self.paper.delete, self.items)
+      for i in self.items:
+        self.paper.unregister_id(i)
+        self.paper.delete(i)
     self.draw()
 
   def focus( self):
@@ -176,11 +177,12 @@ class arrow( meta_enabled, drawable, with_line, line_colored, container, interac
       warn( "trying to remove nonexisting point from arrow")
     pnt.delete()
 
-  def delete( self):
+  def delete(self):
     [p.delete() for p in self.points]
     self.points = []
-    map( self.paper.unregister_id, self.items)
-    map( self.paper.delete, self.items)
+    for i in self.items:
+      self.paper.unregister_id(i)
+      self.paper.delete(i)
     self.items = []
 
   def is_empty_or_single_point( self):
@@ -258,9 +260,10 @@ class arrow( meta_enabled, drawable, with_line, line_colored, container, interac
     """returns tuple of boolean values (start, end)"""
     return divmod( self.pin, 2)
 
-  def lift( self):
+  def lift(self):
     if self.items:
-      map( self.paper.lift, self.items)
+      for i in self.items:
+        self.paper.lift(i)
     [o.lift() for o in self.points]
 
 
