@@ -420,12 +420,14 @@ class chem_paper(Canvas, object):
           to_delete += [a]
       else:
         a.redraw()
-    map( self.stack.remove, to_delete)
+    for i in to_delete:
+      self.stack.remove(i)
     [o.delete() for o in to_delete]
     # PLUS
-    to_delete = filter( lambda o: o.object_type == 'plus', self.selected)
-    map( lambda o: o.delete(), to_delete)
-    map( self.stack.remove, to_delete)
+    to_delete = filter(lambda o: o.object_type == 'plus', self.selected)
+    [o.delete() for o in to_delete]
+    for i in to_delete:
+      self.stack.remove(i)
     # TEXT
     to_delete = filter( lambda o: o.object_type == 'text', self.selected)
     for t in to_delete:
@@ -444,7 +446,8 @@ class chem_paper(Canvas, object):
             to_delete += [a]
         else:
           a.redraw()
-    map( self.stack.remove, to_delete)
+    for i in to_delete:
+      self.stack.remove(i)
     [o.delete() for o in to_delete]
     # BOND AND ATOM
     bonds = [o for o in self.selected if o.object_type == 'bond']
@@ -461,10 +464,11 @@ class chem_paper(Canvas, object):
       if new_mols:
         mols_to_delete.append( mol)
     if new:
-      map( self.stack.remove, mols_to_delete)
-      self.stack.extend( new)
-    empty_mols = filter( lambda o: o.is_empty(), self.molecules)
-    [self.stack.remove( o) for o in empty_mols]
+      for i in mols_to_delete:
+        self.stack.remove(i)
+      self.stack.extend(new)
+    empty_mols = filter(lambda o: o.is_empty(), self.molecules)
+    [self.stack.remove(o) for o in empty_mols]
     # start new undo
     if self.selected:
       self.start_new_undo_record()
