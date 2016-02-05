@@ -600,7 +600,7 @@ class bond( meta_enabled, line_colored, drawable, with_line, interactive, child_
     _d = dashing[0]
     while not _d > d:
       _d += sum( dashing)
-    dashing = map( lambda x: x * d/_d, dashing)
+    dashing = tuple(map(lambda x: x * d/_d, dashing))
     # //
     dx = (x2 - x1)/d
     dy = (y2 - y1)/d
@@ -1010,7 +1010,7 @@ class bond( meta_enabled, line_colored, drawable, with_line, interactive, child_
     self.__dirty = 0
 
 
-  def simple_redraw( self):
+  def simple_redraw(self):
     """very fast redraw that draws only a simple line instead of the bond,
     used in 3d rotation only (as for BKChem 0.5.0)"""
     [self.paper.delete( i) for i in self.second]
@@ -1018,7 +1018,8 @@ class bond( meta_enabled, line_colored, drawable, with_line, interactive, child_
     [self.paper.delete( i) for i in self.third]
     self.third = []
     if self.items:
-      map( self.paper.delete, self.items)
+      for i in self.items:
+        self.paper.delete(i)
       self.items = []
     x1, y1 = self.atom1.get_xy()
     x2, y2 = self.atom2.get_xy()
@@ -1121,7 +1122,8 @@ class bond( meta_enabled, line_colored, drawable, with_line, interactive, child_
     self.second = []
     self.third = []
     self.items = []
-    map( self.paper.delete, items)
+    for i in items:
+      self.paper.delete(i)
     return self
 
 
