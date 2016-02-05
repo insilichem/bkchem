@@ -161,7 +161,7 @@ class molecule( container, top_level, id_enabled, oasa.molecule, with_paper):
     """adds new atom bound to atom id with bond, the position of new atom can be specified in pos or is
     decided calling find_place(), if x, y is specified and matches already existing atom it will be
     used instead of creating new one """
-    if pos != None:
+    if pos is not None:
       x, y = pos
     else:
       if bond_to_use:
