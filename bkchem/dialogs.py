@@ -977,7 +977,8 @@ class fragment_dialog( Pmw.Dialog):
 
 
   def clean( self):
-    map( self.paper.delete, self._items)
+    for i in self._items:
+      self.paper.delete(i)
     self._items = set()
 
 
