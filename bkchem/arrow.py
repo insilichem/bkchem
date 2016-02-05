@@ -248,11 +248,11 @@ class arrow( meta_enabled, drawable, with_line, line_colored, container, interac
     """returns the bounding box of the object as a list of [x1,y1,x2,y2]"""
     return self.paper.list_bbox( self.items)
 
-  def set_pins( self, start=None, end=None):
+  def set_pins(self, start=None, end=None):
     st, en = self.get_pins()
-    if start != None:
+    if start is not None:
       st = start
-    if end != None:
+    if end is not None:
       en = end
     self.pin = en + 2*st
 
