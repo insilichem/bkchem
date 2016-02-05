@@ -267,7 +267,7 @@ class molecule( container, top_level, id_enabled, oasa.molecule, with_paper):
         [o.redraw() for o in self.atoms]
     else:
       offspring = self.check_integrity()
-      deleted += map( self.delete_bond, copy.copy( self.bonds))
+      deleted += list(map(self.delete_bond, copy.copy(self.bonds)))
     return deleted, offspring
 
 
