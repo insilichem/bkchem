@@ -282,7 +282,7 @@ class bond( meta_enabled, line_colored, drawable, with_line, interactive, child_
     if self.item:
       warn( "drawing bond that is probably drawn already", UserWarning, 2)
     method = "_draw_%s%d" % (self.type, self.order or 1)
-    if (automatic != "none" or self.center == None) and self.order == 2:
+    if (automatic != "none" or self.center is None) and self.order == 2:
       sign, center = self._compute_sign_and_center()
       self.bond_width = self.auto_bond_sign * sign * abs( self.bond_width)
       if automatic == "both":
@@ -360,7 +360,7 @@ class bond( meta_enabled, line_colored, drawable, with_line, interactive, child_
       return None
     x1, y1, x2, y2 = where
 
-    if self.center == None or self.bond_width == None:
+    if self.center is None or self.bond_width is None:
       self._decide_distance_and_center()
     d = self.bond_width
     # double
@@ -388,7 +388,7 @@ class bond( meta_enabled, line_colored, drawable, with_line, interactive, child_
       _k = (1-self.double_length_ratio)/2
 
     x1, y1, x2, y2 = where
-    if self.bond_width == None:
+    if self.bond_width is None:
       self._decide_distance_and_center()
     d = self.bond_width
     x, y, x0, y0 = geometry.find_parallel( x1, y1, x2, y2, d*3/4)
@@ -410,7 +410,7 @@ class bond( meta_enabled, line_colored, drawable, with_line, interactive, child_
 
 
   def _draw_h2( self):
-    if self.center == None or self.bond_width == None:
+    if self.center is None or self.bond_width is None:
       self._decide_distance_and_center()
     d = self.bond_width
     # double
@@ -444,7 +444,7 @@ class bond( meta_enabled, line_colored, drawable, with_line, interactive, child_
       return None
     x1, y1, x2, y2 = where
 
-    if self.bond_width == None:
+    if self.bond_width is None:
       self._decide_distance_and_center()
     d = self.bond_width
     x, y, x0, y0 = geometry.find_parallel( x1, y1, x2, y2, d)
@@ -525,7 +525,7 @@ class bond( meta_enabled, line_colored, drawable, with_line, interactive, child_
 
 
   def _draw_d2( self):
-    if self.center == None or self.bond_width == None:
+    if self.center is None or self.bond_width is None:
       self._decide_distance_and_center()
     d = self.bond_width
     # double
@@ -577,7 +577,7 @@ class bond( meta_enabled, line_colored, drawable, with_line, interactive, child_
         # the bond is too short to draw it
         return None
       x1, y1, x2, y2 = where
-    if self.bond_width == None:
+    if self.bond_width is None:
       self._decide_distance_and_center()
     d = self.bond_width
     # we don't want to shorten the bonds (yet)
@@ -698,7 +698,7 @@ class bond( meta_enabled, line_colored, drawable, with_line, interactive, child_
 
 
   def _draw_w2( self):
-    if self.center == None or self.bond_width == None:
+    if self.center is None or self.bond_width is None:
       self._decide_distance_and_center()
     d = self.bond_width
     # double
@@ -731,7 +731,7 @@ class bond( meta_enabled, line_colored, drawable, with_line, interactive, child_
       return None
     x1, y1, x2, y2 = where
 
-    if self.bond_width == None:
+    if self.bond_width is None:
       self._decide_distance_and_center()
     d = self.bond_width
     x, y, x0, y0 = geometry.find_parallel( x1, y1, x2, y2, d)
@@ -766,7 +766,7 @@ class bond( meta_enabled, line_colored, drawable, with_line, interactive, child_
 
 
   def _draw_a2( self):
-    if self.center == None or self.bond_width == None:
+    if self.center is None or self.bond_width is None:
       self._decide_distance_and_center()
     d = self.bond_width
     # double
@@ -799,7 +799,7 @@ class bond( meta_enabled, line_colored, drawable, with_line, interactive, child_
       return None
     x1, y1, x2, y2 = where
 
-    if self.bond_width == None:
+    if self.bond_width is None:
       self._decide_distance_and_center()
     d = self.bond_width
     x, y, x0, y0 = geometry.find_parallel( x1, y1, x2, y2, d)
@@ -896,7 +896,7 @@ class bond( meta_enabled, line_colored, drawable, with_line, interactive, child_
 
 
   def _draw_o2( self):
-    if self.center == None or self.bond_width == None:
+    if self.center is None or self.bond_width is None:
       self._decide_distance_and_center()
     d = self.bond_width
     # double
@@ -948,7 +948,7 @@ class bond( meta_enabled, line_colored, drawable, with_line, interactive, child_
         # the bond is too short to draw it
         return None
       x1, y1, x2, y2 = where
-    if self.bond_width == None:
+    if self.bond_width is None:
       self._decide_distance_and_center()
     d = self.bond_width
     # we don't want to shorten the bonds (yet)
@@ -1356,7 +1356,7 @@ class bond( meta_enabled, line_colored, drawable, with_line, interactive, child_
               elif atms[i].symbol != 'C':
                 sides[i] *= 0.2 # this makes "non C" less then C but more then H
             side = sum(sides)
-      if not ret:
+      if ret is None:
         if side < 0:
           ret = (-1, 0)
         else:
