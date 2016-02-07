@@ -1419,6 +1419,6 @@ Enter InChI:""")
                      'Args': opts[2:]}
 
       with open(plugin) as f:
-        code = compile(f.read(), filename, 'exec')
+        code = compile(f.read(), plugin, 'exec')
         exec(code, the_globals)
 
