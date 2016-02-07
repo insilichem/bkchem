@@ -205,7 +205,6 @@ if __name__ == '__main__':
   myapp.update_idletasks()
   myapp.deiconify()
   myapp.mainloop()
-  myapp.destroy()
 
 # the module was imported from outside
 else:

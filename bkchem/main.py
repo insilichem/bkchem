@@ -976,6 +976,8 @@ class BKChem( Tk):
     while self.papers:
       if not self.close_current_paper( call_quit_if_no_remains=False):
         return
+    if hasattr(self, "editPool") and self.editPool.active:
+      self.editPool._cancel(None)
     if not self.in_batch_mode:
       # we dont save configuration if we are in batch mode
       # this leads to window having size 0x0 and similar problems
@@ -987,9 +989,7 @@ class BKChem( Tk):
         i += 1
         Store.pm.add_preference( "recent-file%d" % i, name)
       self.save_configuration()
-    self.quit()
-    if os.name != "nt":
-      sys.exit(0)
+    self.destroy()
 
 
   def plugin_import( self, pl_id, filename=None):
