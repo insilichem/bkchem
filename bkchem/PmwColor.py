@@ -368,8 +368,8 @@ def bordercolors(root, colorName):
         value40pc = int((14 * value) / 10)
         if value40pc > _MAX_RGB:
             value40pc = _MAX_RGB
-        valueHalfWhite = (_MAX_RGB + value) / 2;
-        lightRGB.append(max(value40pc, valueHalfWhite))
+        valueHalfWhite = (_MAX_RGB + value) / 2
+        lightRGB.append(int(max(value40pc, valueHalfWhite)))
 
         darkValue = int((60 * value) / 100)
         darkRGB.append(darkValue)
