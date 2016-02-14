@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: BKChem 0.14.0\n"
 "Report-Msgid-Bugs-To: Reinis Danne <rei4dan@gmail.com>\n"
 "POT-Creation-Date: 2014-01-06 19:02+0200\n"
-"PO-Revision-Date: 2010-09-11 23:30+0300\n"
-"Last-Translator: Drobot Victor <linux776@mail.ru>\n"
+"PO-Revision-Date: 2015-03-12 10:27+0300\n"
+"Last-Translator: Aleksey Kabanov <ak099@mail.ru>\n"
 "Language-Team: RUSSIAN <linux776@mail.ru>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -17,8 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Poedit-Language: Russian\n"
-"X-Poedit-Country: RUSSIAN FEDERATION\n"
+"X-Generator: Poedit 1.6.4\n"
 
 #: ../../bkchem/arrow.py:51 ../../bkchem/modes.py:760
 #: ../../bkchem/modes.py:972
@@ -235,7 +234,6 @@ msgid "Polish"
 msgstr "Польский"
 
 #: ../../bkchem/data.py:139
-#, fuzzy
 msgid "Traditional Chinese, Taiwan"
 msgstr "Китайский традиционный"
 
@@ -257,11 +255,11 @@ msgstr "Латвийский"
 
 #: ../../bkchem/data.py:144
 msgid "Russian"
-msgstr ""
+msgstr "Русский"
 
 #: ../../bkchem/data.py:145
 msgid "Turkish"
-msgstr ""
+msgstr "Турецкий"
 
 #: ../../bkchem/dialogs.py:54 ../../bkchem/dialogs.py:55
 #: ../../bkchem/dialogs.py:152 ../../bkchem/dialogs.py:153
@@ -433,11 +431,11 @@ msgstr "Поля для обрезанного изображения (в пик
 
 #: ../../bkchem/dialogs.py:603 ../../bkchem/dialogs.py:890
 msgid "Use real minus character (instead of hyphen)?"
-msgstr "Использовать знак \"минус\" вместо переноса"
+msgstr "Использовать знак \"минус\" вместо дефиса"
 
 #: ../../bkchem/dialogs.py:611
 msgid "Replace hyphens with minus in SVG export?"
-msgstr "Заменять переносы минусами при экспорте?"
+msgstr "Заменять дефисы минусами при экспорте в SVG?"
 
 #: ../../bkchem/dialogs.py:655 ../../bkchem/dialogs.py:798
 #: ../../bkchem/main.py:186 ../../bkchem/main.py:746 ../../bkchem/main.py:749
@@ -458,7 +456,7 @@ msgstr "Цвет"
 
 #: ../../bkchem/dialogs.py:691
 msgid "Show hydrogens on visible atoms"
-msgstr "Показывать водороды на видимых атомах"
+msgstr "Показывать атомы водорода на видимых атомах"
 
 #: ../../bkchem/dialogs.py:703
 msgid "Bond length"
@@ -490,11 +488,11 @@ msgstr "только для новых рисунков"
 
 #: ../../bkchem/dialogs.py:787
 msgid "to selected and new drawings (no resize)"
-msgstr "для выбранных и новых рисунков (не измененять размера)"
+msgstr "для выбранных и новых рисунков (не изменять размер)"
 
 #: ../../bkchem/dialogs.py:788
 msgid "to the whole drawing (no resize)"
-msgstr "для всего рисунка (не изменять размера)"
+msgstr "для всего рисунка (не изменять размер)"
 
 #: ../../bkchem/dialogs.py:801
 msgid "Standard saved"
@@ -688,12 +686,12 @@ msgstr "Совпадение ID"
 
 #: ../../bkchem/interactors.py:111
 msgid "This ID is already used, use a different one"
-msgstr "Этот ID уже используется, возьмите другое"
+msgstr "Этот ID уже используется, возьмите другой"
 
 #: ../../bkchem/interactors.py:118
 #, python-format
 msgid "ID %s was set to molecule"
-msgstr "ID %s было назначено молекуле"
+msgstr "ID %s был назначен молекуле"
 
 #: ../../bkchem/interactors.py:126
 msgid "Validity error"
@@ -709,7 +707,7 @@ msgstr ""
 
 #: ../../bkchem/interactors.py:128
 msgid "It is not possible to export them."
-msgstr "Невозможно экспортировать."
+msgstr "Невозможно экспортировать их."
 
 #: ../../bkchem/interactors.py:129 ../../bkchem/interactors.py:134
 #: ../../bkchem/plugins/CML.py:221 ../../bkchem/plugins/CML.py:226
@@ -793,8 +791,8 @@ msgid ""
 "Unable to parse the text-\n"
 "probably problem with input encoding!"
 msgstr ""
-"Невозможно распознать текст-\n"
-"возможно проблема с кодировкой!"
+"Не удалось распознать текст-\n"
+"возможно, проблема с кодировкой!"
 
 #: ../../bkchem/interactors.py:206
 #, python-format
@@ -810,11 +808,12 @@ msgid "Errors"
 msgstr "Ошибки"
 
 #: ../../bkchem/interactors.py:231
-#, fuzzy, python-format
+#, python-format
 msgid "%d molecule have no template atom specified"
 msgid_plural "%d molecules have no template atom specified"
-msgstr[0] "%d молекула не имеет указанного шаблона связи"
-msgstr[1] "%d молекул не имеет указанного шаблона связи"
+msgstr[0] "%d молекула не имеет указанного шаблона атома"
+msgstr[1] "%d молекул не имеет указанного шаблона атома"
+msgstr[2] "%d молекул не имеет указанного шаблона атома"
 
 #: ../../bkchem/interactors.py:237
 #, python-format
@@ -822,6 +821,7 @@ msgid "%d molecule have no name specified"
 msgid_plural "%d molecules have no name specified"
 msgstr[0] "%d молекула не имеет имени"
 msgstr[1] "%d молекул не имеет имени"
+msgstr[2] "%d молекул не имеет имени"
 
 #: ../../bkchem/interactors.py:243
 msgid "Warnings"
@@ -833,6 +833,7 @@ msgid "%d molecule have no template bond specified"
 msgid_plural "%d molecules have no template bond specified"
 msgstr[0] "%d молекула не имеет указанного шаблона связи"
 msgstr[1] "%d молекул не имеет указанного шаблона связи"
+msgstr[2] "%d молекул не имеет указанного шаблона связи"
 
 #: ../../bkchem/interactors.py:253
 msgid "Please correct the above errors first"
@@ -873,7 +874,7 @@ msgid ""
 "Template with this name already exists (path %s).\n"
 "Should I rewrite it?"
 msgstr ""
-"Шаблон с тим именем уже существует (%s).\n"
+"Шаблон с этим именем уже существует (%s).\n"
 "Перезаписать?"
 
 #: ../../bkchem/interactors.py:304
@@ -913,7 +914,7 @@ msgstr "Номер %s был назначен атому(ам)"
 
 #: ../../bkchem/interactors.py:347
 msgid "BKChem interpreted the entered text as an atom"
-msgstr "BKChem интерпретировал введенный текст как атом"
+msgstr "BKChem интерпретировал введённый текст как атом"
 
 #: ../../bkchem/interactors.py:349
 msgid ""
@@ -957,7 +958,7 @@ msgstr ""
 
 #: ../../bkchem/interactors.py:459
 msgid "Groups must be expanded to compute oxidation number for them."
-msgstr "Группы должны быть расширены для подсчета степени окисления."
+msgstr "Группы должны быть расширены для подсчёта степени окисления."
 
 #: ../../bkchem/interactors.py:465
 msgid ""
@@ -1131,11 +1132,11 @@ msgstr "Действия для редактирования объектов"
 
 #: ../../bkchem/main.py:206
 msgid "Undo"
-msgstr "Вернуть"
+msgstr "Отменить"
 
 #: ../../bkchem/main.py:206
 msgid "Revert the last change made"
-msgstr "Вернуть последнее действие"
+msgstr "Отменить последнее действие"
 
 #: ../../bkchem/main.py:207
 msgid "Redo"
@@ -1343,7 +1344,7 @@ msgstr "Посчитать степень окисления"
 
 #: ../../bkchem/main.py:251
 msgid "Compute and display the oxidation number of selected atoms"
-msgstr "Расчет и отображение степени окисления выбранных атомов"
+msgstr "Расчёт и отображение степени окисления выбранных атомов"
 
 #: ../../bkchem/main.py:253
 msgid "Read SMILES"
@@ -1557,12 +1558,12 @@ msgstr "CD-SVG"
 #: ../../bkchem/main.py:832
 #, python-format
 msgid "saved to %s file: %s"
-msgstr "сохранено в файл: %s"
+msgstr "сохранено в файл %s: %s"
 
 #: ../../bkchem/main.py:837
 #, python-format
 msgid "failed to save to %s file: %s"
-msgstr "невозможно сохранить в файл: %s"
+msgstr "не удалось сохранить в файл %s: %s"
 
 #: ../../bkchem/main.py:859 ../../bkchem/main.py:1059
 msgid "Forget changes?"
@@ -1811,7 +1812,7 @@ msgid ""
 "(or change direction)\n"
 "Shift+click on a double bond to move the position of the second line"
 msgstr ""
-"щелкните по атому для добавления новой одинарной связи, щелкните по связи "
+"щёлкните по атому для добавления новой одинарной связи, щёлкните по связи "
 "для изменения её порядка (или направления)\n"
 "Нажмите Shift и щелкните по двойной связи для изменения положения второй "
 "линии"
@@ -1872,7 +1873,7 @@ msgstr ""
 #: ../../bkchem/messages.py:49 ../../bkchem/messages.py:50
 #: ../../bkchem/messages.py:51 ../../bkchem/messages.py:52
 msgid "click and drag to draw the corresponding shape"
-msgstr "щелкните и перетащите, чтобы придать соответствующие формы"
+msgstr "щёлкните и перетащите, чтобы придать соответствующие формы"
 
 #: ../../bkchem/messages.py:53
 msgid ""
@@ -1886,37 +1887,37 @@ msgstr ""
 msgid ""
 "click an atom to add a radical mark to it, it will be removed in case it is "
 "already present"
-msgstr "щелкните по атому для добавления/удаления радикала"
+msgstr "щёлкните по атому для добавления/удаления радикала"
 
 #: ../../bkchem/messages.py:59
 msgid ""
 "click an atom to add a biradical mark to it, it will be removed in case it "
 "is already present"
-msgstr "щелкните по атому для добавления/удаления бирадикала"
+msgstr "щёлкните по атому для добавления/удаления бирадикала"
 
 #: ../../bkchem/messages.py:60
 msgid ""
 "click an atom to add a free electron pair mark to it, it will be removed in "
 "case it is already present"
-msgstr "щелкните по атому для добавления/удаления свободной электронной пары"
+msgstr "щёлкните по атому для добавления/удаления свободной электронной пары"
 
 #: ../../bkchem/messages.py:61
 msgid ""
 "click an atom to add a plus mark to it, it will be removed in case it is "
 "already present"
-msgstr "щелкните по атому для добавления/удаления знака \"плюс\""
+msgstr "щёлкните по атому для добавления/удаления знака \"плюс\""
 
 #: ../../bkchem/messages.py:62
 msgid ""
 "click an atom to add a minus mark to it, it will be removed in case it is "
 "already present"
-msgstr "щелкните по атому для добавления/удаления знака \"минус\""
+msgstr "щёлкните по атому для добавления/удаления знака \"минус\""
 
 #: ../../bkchem/messages.py:67
 msgid ""
 "click a bond or two atoms to align the specified line into vertical position"
 msgstr ""
-"щелкните по связи или двум атомам для выравнивания указанной линии по "
+"щёлкните по связи или двум атомам для выравнивания указанной линии по "
 "вертикали"
 
 #: ../../bkchem/messages.py:68
@@ -1924,7 +1925,7 @@ msgid ""
 "click a bond or two atoms to align the specified line into horizontal "
 "position"
 msgstr ""
-"щелкните по связи или двум атомам для выравнивания указанной линии по "
+"щёлкните по связи или двум атомам для выравнивания указанной линии по "
 "горизонтали"
 
 #: ../../bkchem/messages.py:69
@@ -1979,7 +1980,7 @@ msgstr ""
 "\n"
 "Извините, но BKChem сильно зависит от Pmw. Установите пожалуйста Pmw и "
 "попробуйте снова.\n"
-"(для дополнительной информации смотри документацию Pmw)"
+"(для дополнительной информации смотрите документацию Pmw)"
 
 #: ../../bkchem/messages.py:96
 msgid ""
@@ -2491,23 +2492,25 @@ msgstr "вставлено из буфера обмена"
 #, python-format
 msgid "undo (%d further undo available)"
 msgid_plural "undo (%d further undos available)"
-msgstr[0] "вернуть (%d следующий возврат возможен)"
-msgstr[1] "вернуть (%d следующих возвратов возможно)"
+msgstr[0] "отменить (%d следующая отмена возможна)"
+msgstr[1] "отменить (%d следующие отмен возможны)"
+msgstr[2] "отменить (%d следующих отмен возможны)"
 
 #: ../../bkchem/paper.py:1177
 msgid "no further undo"
-msgstr "невозможно вернуть"
+msgstr "больше отменить невозможно"
 
 #: ../../bkchem/paper.py:1186
 #, python-format
 msgid "redo (%d further redo available)"
 msgid_plural "redo (%d further redos available)"
 msgstr[0] "повторить (%d следующий повтор возможен)"
-msgstr[1] "повторить (%d следующих повторов возможно)"
+msgstr[1] "повторить (%d следующих повтора возможны)"
+msgstr[2] "повторить (%d следующих повторов возможно)"
 
 #: ../../bkchem/paper.py:1190
 msgid "no further redo"
-msgstr "больше не повторить"
+msgstr "больше повторить невозможно"
 
 #: ../../bkchem/paper.py:1271
 msgid "selected top_levels were exported to clipboard in SVG"
@@ -2581,23 +2584,27 @@ msgstr "BKChem запускается..."
 msgid "%d text only atom (chemical interpretation is unknown)"
 msgid_plural "%d text only atoms (chemical interpretation is unknown)"
 msgstr[0] "%d текстовый атом (химическое значение неизвестно)"
-msgstr[1] "%d текстовых атомов (химическое значение неизвестно)"
+msgstr[1] "%d текстовых атома (химическое значение неизвестно)"
+msgstr[2] "%d текстовых атомов (химическое значение неизвестно)"
 
 #: ../../bkchem/validator.py:100
 #, python-format
 msgid "%d atom with exceeded valency"
 msgid_plural "%d atoms with exceeded valency"
 msgstr[0] "%d атом с избыточной валентностью"
-msgstr[1] "%d атомов с избыточной валентностью"
+msgstr[1] "%d атома с избыточной валентностью"
+msgstr[2] "%d атомов с избыточной валентностью"
 
 #: ../../bkchem/validator.py:106
 #, python-format
 msgid "%d group(s) (groups need to be expanded for some export formats)"
 msgid_plural "%d group(s) (groups need to be expanded for some export formats)"
 msgstr[0] ""
-"%d группа(ы) (группы должны быть расширены для некоторых типов экспорта)"
+"%d группа (группы должны быть расширены для некоторых типов экспорта)"
 msgstr[1] ""
-"%d групп(ы) (группы должны быть расширены для некоторых типов экспорта)"
+"%d группы (группы должны быть расширены для некоторых типов экспорта)"
+msgstr[2] ""
+"%d групп (группы должны быть расширены для некоторых типов экспорта)"
 
 #: ../../bkchem/validator.py:112
 #, python-format
@@ -2609,6 +2616,9 @@ msgstr[0] ""
 "%d связь нулевого порядка (некоторые связи не будути экспортированы в "
 "химический формат)"
 msgstr[1] ""
+"%d связи нулевого порядка (некоторые связи не будути экспортированы в "
+"химический формат)"
+msgstr[2] ""
 "%d связей нулевого порядка (некоторые связи не будути экспортированы в "
 "химический формат)"
 
@@ -2762,7 +2772,8 @@ msgstr "Вы должны выбрать одну молекула (любой �
 msgid "%d molecules selected."
 msgid_plural "%d molecules selected."
 msgstr[0] "%d молекула выбрана."
-msgstr[1] "%d молекул выбрано."
+msgstr[1] "%d молекулы выбрано."
+msgstr[2] "%d молекул выбрано."
 
 #: ../../bkchem/plugins/molfile.py:131
 msgid "Molfile"
