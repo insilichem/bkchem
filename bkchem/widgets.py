@@ -297,7 +297,7 @@ class ValueWithUnitParent(Tkinter.Frame):
     if self._recent_unit:
       self.counter['increment'] = self.units[self._recent_unit]['increment']
     else:
-      self._recent_unit = units.keys()[0]
+      self._recent_unit = list(units.keys())[0]
     self.counter.pack( side='left')
     # the unit selection widget
     us = sorted(units.keys())
