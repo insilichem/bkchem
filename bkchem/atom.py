@@ -281,8 +281,8 @@ class atom(drawable_chem_vertex, oasa.atom):
       form = PT.text_to_hydrogenated_atom( name)
       if form:
         # it is!
-        a = form.keys()
-        a.remove( 'H')
+        a = list(form.keys())
+        a.remove('H')
         if occupied_valency is None:
           valency = self.occupied_valency
         else:
