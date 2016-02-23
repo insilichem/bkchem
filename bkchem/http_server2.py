@@ -48,7 +48,7 @@ class bkchem_http_handler( BaseHTTPServer.BaseHTTPRequestHandler):
 
   def do_GET_fallback( self):
     protocol, address, path, parameters, query, fragment = urlparse.urlparse( self.path)
-    path_list = filter( None, path.split("/"))
+    path_list = list(filter(None, path.split("/")))
 
     if len( path_list) == 1 or path_list[0] not in self.dirs:
       # these are static pages
