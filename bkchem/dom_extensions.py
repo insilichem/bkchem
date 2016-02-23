@@ -73,8 +73,8 @@ def getTextFromElement( element):
   return text
 
 
-def childNodesWithoutEmptySpaces( node):
-  return filter( isNotEmptyText, node.childNodes)
+def childNodesWithoutEmptySpaces(node):
+  return list(filter(isNotEmptyText, node.childNodes))
 
 
 def isNotEmptyText( element):
