@@ -648,10 +648,10 @@ class edit_mode(basic_mode):
     [a.reposition_marks() for a in atms if isinstance( a, atom)]
 
 
-  def _end_of_empty_drag( self, x1, y1, x2, y2):
-    Store.app.paper.select( filter( lambda o: o,\
-                                    map( Store.app.paper.id_to_object,\
-                                         Store.app.paper.find_enclosed( x1, y1, x2, y2))))
+  def _end_of_empty_drag(self, x1, y1, x2, y2):
+    Store.app.paper.select(list(filter(lambda o: o,\
+                                       map(Store.app.paper.id_to_object,\
+                                           Store.app.paper.find_enclosed(x1, y1, x2, y2)))))
 
 
   ## METHODS FOR KEY EVENTS RESPONSES
