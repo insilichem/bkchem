@@ -1082,7 +1082,7 @@ class BKChem( Tk):
         try:
           doc = exporter.write_to_file( a)
         except:
-          tkMessageBox.showerror(_("Export error"), _("Plugin failed to export with following error:\n %s") % sys.exc_value)
+          tkMessageBox.showerror(_("Export error"), _("Plugin failed to export with following error:\n %s") % sys.exc_info()[1])
           return False
       else:
         doc = exporter.write_to_file( a)
@@ -1189,29 +1189,29 @@ Enter InChI:""")
                                    _("Some feature of the submitted InChI is not supported.\n\nYou have most probaly submitted a multicomponent structure (having a . in the sumary layer"))
             return
           else:
-            raise ValueError("the processing of inchi failed with following error %s" % sys.exc_value)
+            raise ValueError("the processing of inchi failed with following error %s" % sys.exc_info()[1])
         except oasa.oasa_exceptions.oasa_inchi_error as e:
           if not inchi:
             tkMessageBox.showerror(_("Error processing %s") % 'InChI',
                                    _("There was an error reading the submitted InChI.\n\nIf you are sure it is a valid InChI, please send me a bug report."))
             return
           else:
-            raise ValueError("the processing of inchi failed with following error %s" % sys.exc_value)
+            raise ValueError("the processing of inchi failed with following error %s" % sys.exc_info()[1])
         except oasa.oasa_exceptions.oasa_unsupported_inchi_version_error as e:
           if not inchi:
             tkMessageBox.showerror(_("Error processing %s") % 'InChI',
                                    _("The submitted InChI has unsupported version '%s'.\n\nYou migth try resubmitting with the version string (the first part of InChI) changed to '1'.") % e.version)
             return
           else:
-            raise ValueError("the processing of inchi failed with following error %s" % sys.exc_value)
+            raise ValueError("the processing of inchi failed with following error %s" % sys.exc_info()[1])
         except:
 
           if not inchi:
             tkMessageBox.showerror(_("Error processing %s") % 'InChI',
-                                   _("The reading of InChI failed with following error:\n\n'%s'\n\nIf you are sure you have submitted a valid InChI, please send me a bug report.") % sys.exc_value)
+                                   _("The reading of InChI failed with following error:\n\n'%s'\n\nIf you are sure you have submitted a valid InChI, please send me a bug report.") % sys.exc_info()[1])
             return
           else:
-            raise ValueError("the processing of inchi failed with following error %s" % sys.exc_value)
+            raise ValueError("the processing of inchi failed with following error %s" % sys.exc_info()[1])
 
       self.paper.stack.append( mol)
       mol.draw()
