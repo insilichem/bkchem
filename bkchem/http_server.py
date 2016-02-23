@@ -45,7 +45,7 @@ class bkchem_http_handler( BaseHTTPServer.BaseHTTPRequestHandler):
 
 
   def do_GET( self):
-    path_list = filter( None, self.path.split("/"))
+    path_list = list(filter(None, self.path.split("/")))
 
     if len( path_list) == 1 or path_list[0] not in self.dirs:
       # these are static pages
