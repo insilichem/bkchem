@@ -163,14 +163,14 @@ class external_data_manager( object):
           return True
       return False
 
-    v = self.convert_to_type( value, t)
+    v = self.convert_to_type(value, t)
     if t in self.types:
-      if filter( None, [isinstance( v, tt) for tt in self.types[t]]):
+      if list(filter(None, [isinstance(v, tt) for tt in self.types[t]])):
         return True
       else:
         return False
     else:
-      return isinstance( value, t)
+      return isinstance(value, t)
 
 
   def expand_type( self, t):
