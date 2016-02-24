@@ -1491,7 +1491,7 @@ class bond_align_mode( edit_mode):
     tr = self.__class__.__dict__['_transform_'+self.get_submode(0)]( self, coords)
     if hasattr( self, '_apply_to_'+self.get_submode(0)):
       apply_to = self.__class__.__dict__['_apply_to_'+self.get_submode(0)]( self)
-      if apply_to == None:
+      if apply_to is None:
         return
       [o.transform( tr) for o in apply_to]
     else:
