@@ -339,7 +339,7 @@ class state_record(object):
   def object_changed( self, o):
     """returns True if the object o differs from the state recorded here"""
     rec = self.get_record( o)
-    if rec == None:
+    if rec is None:
       return True
     for a in o.meta__undo_fake + o.meta__undo_simple + o.meta__undo_properties:
       if getattr( o, a) != rec[a]:
