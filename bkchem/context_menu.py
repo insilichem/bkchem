@@ -189,8 +189,9 @@ def draw_mark_circle( objs):
     return "draw_circle", (_("Circle around mark"), ((True, _("yes")), (False, _("no"))))
 
 
-def show_number( objs):
-  with_number = [o for o in objs if o.object_type == "atom" and hasattr( o, "number") and o.number != None]
+def show_number(objs):
+  with_number = [o for o in objs
+                       if o.object_type == "atom" and hasattr(o, "number") and o.number is not None]
   if not with_number:
     return "show_number", None
   else:
