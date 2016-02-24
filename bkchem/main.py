@@ -436,7 +436,7 @@ class BKChem( Tk):
       os.getcwdu = os.getcwd
     if os.path.abspath( os_support.get_bkchem_run_dir()) == os.path.abspath( os.getcwdu()):
       # we are running from the installation directory
-      if os_support.site_config != None:
+      if os_support.site_config is not None:
         # we are probably on Linux after install, go ahead
         self.save_dir = Store.pm.get_preference( "default-dir")
       elif sys.path[0].endswith( ".exe"):
