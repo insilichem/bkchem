@@ -107,7 +107,7 @@ class Screen(object):
     if isinstance(xyz, (tuple, list)):
       return [self.px_to_unit( i, unit=unit, round_to=round_to) for i in xyz]
     # handle empty queries
-    if xyz == None:
+    if xyz is None:
       return None
     # different units
     if unit == 'cm':
@@ -120,7 +120,7 @@ class Screen(object):
       warn( "unknown unit passed to Screen.px_to_unit")
       return None
     # round or not round and return
-    if round_to == None:
+    if round_to is None:
       return xyz/dots_per_unit
     else:
       return round( xyz/dots_per_unit, round_to)
@@ -132,7 +132,7 @@ class Screen(object):
     if isinstance(xyz, (tuple, list)):
       return [self.px_to_text_with_unit( i, unit=unit, round_to=round_to) for i in xyz]
     # round or not round and return
-    if round_to == None:
+    if round_to is None:
       return '%f%s' % (self.px_to_unit( xyz, unit=unit, round_to=round_to), unit)
     else:
       return ('%.'+str( round_to)+'f%s') % (self.px_to_unit( xyz, unit=unit, round_to=round_to), unit)
